@@ -1,0 +1,122 @@
+﻿@model List<Category>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cinema E-Tickets</title>
+<link href="~/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/css/Customer/styles.css" rel="stylesheet" />
+
+<style>
+    body {
+        background-color: #2c2c2c;
+        color: #f5f5f5;
+    }
+
+    h2 {
+        color: #ffd700;
+        margin-bottom: 30px;
+        font-weight: bold;
+    }
+
+    .card.category-card {
+        background-color: #000000; /* أسود كامل */
+        color: #ffd700;
+        border: 1px solid #ffd700;
+        border-radius: 10px;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        position: relative;
+        z-index: 1;
+    }
+
+        .card.category-card::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+            z-index: -1;
+            opacity: 0;
+        }
+
+        .card.category-card:hover::before {
+            width: 300px;
+            height: 300px;
+            opacity: 1;
+        }
+
+        .card.category-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+        }
+
+    .card-header {
+        background-color: transparent;
+        color: #ffd700;
+        border-bottom: 1px solid #ffd700;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .card-title {
+        color: #ffffff;
+        text-align: center;
+    }
+
+    .btn-gold-outline {
+        border: 1px solid #ffd700;
+        color: #ffd700;
+        background-color: transparent;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+        .btn-gold-outline:hover {
+            background-color: #ffd700;
+            color: #000000;
+        }
+
+    .category-img {
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-bottom: 1px solid #ffd700;
+    }
+</style>
+
+<div class="container my-5">
+    <h2 class="text-center">All Categories</h2>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card category-card shadow h-100">
+                    <!-- صورة الكاتجوري -->
+                    <img src="~/images/Categorys/@item.CategoryUrl" alt="@item.Name" class="card-img-top category-img">
+
+                    <div class="card-header">
+                        🎬 Category
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="card-title">@item.Name</h5>
+
+                        <div class="text-center mt-auto">
+                            <a href="~/Customer/Home/Index?categoryId=@item.Id" class="btn btn-gold-outline mt-3 px-4">
+                                View Movies
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script src="~/js/jquery-3.6.0.min.js"></script>
+<script src="~/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/Customer/scripts.js"></script>

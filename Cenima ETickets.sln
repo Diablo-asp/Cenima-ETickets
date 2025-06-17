@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cenima ETickets", "Cenima ETickets\Cenima ETickets.csproj", "{6690F986-3BC5-4F17-96D3-044DFBD75248}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6690F986-3BC5-4F17-96D3-044DFBD75248}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6690F986-3BC5-4F17-96D3-044DFBD75248}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6690F986-3BC5-4F17-96D3-044DFBD75248}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6690F986-3BC5-4F17-96D3-044DFBD75248}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F9831683-A73C-469B-B860-5402140EB1D5}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,93 @@
+﻿@model List<Cenima>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>All Cinemas</title>
+<link href="~/css/bootstrap.min.css" rel="stylesheet" />
+
+<style>
+    body {
+        background-color: #2c2c2c;
+        color: #f5f5f5;
+    }
+
+    h2 {
+        color: #ffd700;
+        margin-bottom: 40px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .cinema-card {
+        background-color: #000;
+        border: 1px solid #ffd700;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+    }
+
+        .cinema-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+        }
+
+    .cinema-logo {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .cinema-body {
+        padding: 20px;
+    }
+
+    .cinema-name {
+        font-size: 20px;
+        color: #ffd700;
+        font-weight: bold;
+    }
+
+    .cinema-address {
+        color: #ccc;
+        margin-bottom: 15px;
+    }
+
+    .btn-gold-outline {
+        border: 1px solid #ffd700;
+        color: #ffd700;
+        background-color: transparent;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+        .btn-gold-outline:hover {
+            background-color: #ffd700;
+            color: #000;
+        }
+</style>
+
+<div class="container my-5">
+    <h2>Available Cinemas</h2>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="cinema-card shadow">
+                    <img src="~/images/logo.png" alt="@item.Name Logo" class="cinema-logo" />
+
+                    <div class="cinema-body">
+                        <div class="cinema-name">@item.Name</div>
+                        <div class="cinema-address">Address: @item.Address</div>
+                        <a href="~/Customer/Home/Index?cinemaId=@item.Id" class="btn btn-gold-outline px-4">
+                            View Movies
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script src="~/js/jquery-3.6.0.min.js"></script>
+<script src="~/js/bootstrap.bundle.min.js"></script>
