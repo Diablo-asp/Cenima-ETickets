@@ -18,7 +18,7 @@ namespace Cenima_ETickets.Areas.Customers.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index(Movie movie, int page = 1, int? categoryId = null, int? cinemaId = null)
+        public IActionResult Index(string? name, int page = 1, int? categoryId = null, int? cinemaId = null)
         {
             IQueryable<Movie> moviesQuery = _Context.movies
                 .Include(e => e.cenima)
@@ -30,9 +30,9 @@ namespace Cenima_ETickets.Areas.Customers.Controllers
             const double totalNumberOfMoviesInPages = 9.0;
 
             #region Filter Movies
-            if (!string.IsNullOrEmpty(movie.Name))
+            if (!string.IsNullOrEmpty(name))
             {
-                moviesQuery = moviesQuery.Where(e => e.Name.Contains(movie.Name));
+                moviesQuery = moviesQuery.Where(e => e.Name.Contains(name));
             }
 
             if (categoryId.HasValue)
@@ -48,7 +48,7 @@ namespace Cenima_ETickets.Areas.Customers.Controllers
 
             #region Pagination
             var totalNumberOfPages = Math.Ceiling(moviesQuery.Count() / totalNumberOfMoviesInPages);
-            if (totalNumberOfPages < page)
+            if (totalNumberOfPages < page && totalNumberOfPages > 0)
                 return NotFound();
 
             var movies = moviesQuery
@@ -57,7 +57,7 @@ namespace Cenima_ETickets.Areas.Customers.Controllers
                 .ToList();
             #endregion
 
-            #region ???????? - ??? 5 ????? (??? ?????? ?????)
+            #region Slider Movies
             var sliderMovies = _Context.movies
                 .OrderByDescending(m => m.StartDate)
                 .Take(5)
@@ -68,7 +68,7 @@ namespace Cenima_ETickets.Areas.Customers.Controllers
             {
                 Movies = movies,
                 SliderMovies = sliderMovies,
-                Name = movie.Name,
+                Name = name,
                 CategoryId = categoryId,
                 CinemaId = cinemaId,
                 Categories = categories,
@@ -80,24 +80,33 @@ namespace Cenima_ETickets.Areas.Customers.Controllers
             return View(vm);
         }
 
-
-
-
-
-        public IActionResult Details(int Id)
+        public IActionResult Details(int id)
         {
-            var actorMovie = _Context.ActorMovies
-                    .Include(m => m.movie.cenima)
-                    .Include(m => m.movie.Category)
-                    .Include(a => a.actor)
-                    .Include(b => b.movie)
-                    .FirstOrDefault(m => m.movie.Id == Id);
+            var movie = _Context.movies
+                .Include(m => m.Category)
+                .Include(m => m.cenima)
+                .Include(m => m.ActorMovies)
+                    .ThenInclude(am => am.actor) 
+                .FirstOrDefault(m => m.Id == id);
 
-            if (actorMovie == null)
+            if (movie == null)
                 return NotFound();
 
-            return View(actorMovie);
+            movie.actors = movie.ActorMovies.Select(am => am.actor).ToList();
+
+            return View(movie);
         }
+
+        public IActionResult Actor(int id)
+        {
+            var actor = _Context.actors.Include(m => m.movies).FirstOrDefault(a => a.Id == id);
+
+            if (actor == null)
+                return NotFound();
+
+            return View(actor);
+        }
+
 
         public IActionResult Categorys(int Id)
         {

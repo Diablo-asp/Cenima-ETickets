@@ -11,40 +11,172 @@
 </head>
 <body>
     <header>
+        <!-- ========== Navbar ========== -->
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark" style="background-color: #343a40;">
             <div class="container-fluid">
 
-                <!-- لوجو وصاحب الموقع -->
+                <!-- اللوجو -->
                 <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="~/images/logo.png" alt="Logo" style="height: 30px; margin-right: 10px;">
-                    <span class="text-light">Cenima_ETickets</span>
+                    <span>Cinema_ETickets</span>
                 </a>
 
-                <!-- زرار فتح القايمة في الموبايل -->
+                <!-- زر الفتح في الموبايل -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <!-- اللينكات + السيرش -->
+                <!-- الروابط + الزر -->
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center">
-
-                    <!-- روابط التنقل -->
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Home" asp-action="Categorys">Categorys</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Categorys">Categorys</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="Customer" asp-controller="Home" asp-action="Cinemas">Cinemas</a>
+                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Cinemas">Cinemas</a>
                         </li>
                     </ul>
-         
+
+                    <!-- زرار الوضع -->
+                    <button id="toggleTheme" class="theme-toggle-btn ms-3" title="Toggle Theme">🌙</button>
                 </div>
             </div>
         </nav>
+
+        <!-- ========== CSS ========== -->
+        <style>
+            body.light-mode {
+                background-color: #f8f9fa;
+                color: #212529;
+                transition: background-color 0.4s ease, color 0.4s ease;
+            }
+
+            body.dark-mode {
+                background-color: #1e1e1e;
+                color: #f1f1f1;
+                transition: background-color 0.4s ease, color 0.4s ease;
+            }
+
+            .navbar.light-mode {
+                background-color: #ffffff !important;
+            }
+
+            .navbar.dark-mode {
+                background-color: #343a40 !important;
+            }
+
+            .navbar.light-mode .nav-link {
+                color: #212529 !important;
+            }
+
+            .navbar.dark-mode .nav-link {
+                color: #ffffff !important;
+            }
+
+            .navbar.light-mode .navbar-brand span {
+                color: #212529 !important;
+            }
+
+            .navbar.dark-mode .navbar-brand span {
+                color: #ffffff !important;
+            }
+
+            .theme-toggle-btn {
+                background-color: transparent;
+                border: 2px solid #ccc;
+                color: #fff;
+                font-size: 18px;
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+            }
+
+                .theme-toggle-btn:hover {
+                    background-color: #ffd700;
+                    color: #000;
+                    box-shadow: 0 0 10px #ffd700;
+                }
+
+            body.light-mode .theme-toggle-btn {
+                border-color: #444;
+                color: #212529;
+            }
+
+                body.light-mode .theme-toggle-btn:hover {
+                    background-color: #343a40;
+                    color: #fff;
+                }
+
+            .card.light-mode {
+                background-color: #ffffff;
+                color: #000;
+            }
+
+            .card.dark-mode {
+                background-color: #2c2c2c;
+                color: #fff;
+            }
+
+            .list-group-item.light-mode {
+                background-color: #fff;
+                color: #000;
+            }
+
+            .list-group-item.dark-mode {
+                background-color: #2c2c2c;
+                color: #fff;
+                border-color: #444;
+            }
+        </style>
+
+        <!-- ========== JS ========== -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const body = document.body;
+                const navbar = document.querySelector(".navbar");
+                const cards = document.querySelectorAll(".card");
+                const listItems = document.querySelectorAll(".list-group-item");
+                const btn = document.getElementById("toggleTheme");
+
+                let currentMode = localStorage.getItem("theme") || "dark";
+                applyTheme(currentMode);
+
+                btn.addEventListener("click", function () {
+                    currentMode = currentMode === "dark" ? "light" : "dark";
+                    localStorage.setItem("theme", currentMode);
+                    applyTheme(currentMode);
+                });
+
+                function applyTheme(mode) {
+                    body.className = `${mode}-mode`;
+                    navbar.classList.remove("light-mode", "dark-mode");
+                    navbar.classList.add(`${mode}-mode`);
+
+                    cards.forEach(c => {
+                        c.classList.remove("light-mode", "dark-mode");
+                        c.classList.add(`${mode}-mode`);
+                    });
+
+                    listItems.forEach(item => {
+                        item.classList.remove("light-mode", "dark-mode");
+                        item.classList.add(`${mode}-mode`);
+                    });
+
+                    btn.textContent = mode === "dark" ? "🌞" : "🌙";
+                }
+            });
+        </script>
+
+
     </header>
 
 

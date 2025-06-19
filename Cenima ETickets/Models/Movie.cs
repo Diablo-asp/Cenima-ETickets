@@ -35,5 +35,6 @@ namespace Cenima_ETickets.Models
         public Cenima cenima { get; set; }
         public Category Category { get; set; }
         public ICollection<Actor> actors { get; set; }
+        public ICollection<ActorMovie> ActorMovies { get; set; }
     }
 }

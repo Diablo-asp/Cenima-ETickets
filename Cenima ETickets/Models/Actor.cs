@@ -11,5 +11,6 @@
 
 
         public ICollection<Movie> movies { get; set; }
+        public ICollection<ActorMovie> ActorMovies { get; set; }
     }
 }
