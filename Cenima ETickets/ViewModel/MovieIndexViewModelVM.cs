@@ -6,6 +6,7 @@ namespace Cenima_ETickets.ViewModel
     {
         public List<Movie> Movies { get; set; }
         public List<Movie> SliderMovies { get; set; }
+        public Movie Movie { get; set; }
 
         public string Name { get; set; }
         public int? CategoryId { get; set; }

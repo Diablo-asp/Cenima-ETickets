@@ -1,0 +1,80 @@
+﻿@model MovieIndexViewModelVM
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="container mt-4">
+    <h2>Create Movie</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label asp-for="Movie.Name" class="form-label"></label>
+                    <input asp-for="Movie.Name" class="form-control" />
+                    <span asp-validation-for="Movie.Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Movie.Description" class="form-label"></label>
+                    <textarea asp-for="Movie.Description" class="form-control"></textarea>
+                    <span asp-validation-for="Movie.Description" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Movie.Price" class="form-label"></label>
+                    <input asp-for="Movie.Price" class="form-control" />
+                    <span asp-validation-for="Movie.Price" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Movie.ImgUrl" class="form-label"></label>
+                    <input asp-for="Movie.ImgUrl" class="form-control" />
+                    <span asp-validation-for="Movie.ImgUrl" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Movie.TrairlerUrl" class="form-label"></label>
+                    <input asp-for="Movie.TrairlerUrl" class="form-control" />
+                    <span asp-validation-for="Movie.TrairlerUrl" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Movie.StartDate" class="form-label"></label>
+                    <input asp-for="Movie.StartDate" class="form-control" />
+                    <span asp-validation-for="Movie.StartDate" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Movie.EndDate" class="form-label"></label>
+                    <input asp-for="Movie.EndDate" class="form-control" />
+                    <span asp-validation-for="Movie.EndDate" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Movie.CenimaId" class="form-label"></label>
+                    <select asp-for="Movie.CenimaId" class="form-select" asp-items="@(new SelectList(Model.Cenimas, "Id", "Name"))"></select>
+                    <span asp-validation-for="Movie.CenimaId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Movie.CategoryId" class="form-label"></label>
+                    <select asp-for="Movie.CategoryId" class="form-select" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))"></select>
+                    <span asp-validation-for="Movie.CategoryId" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid">
+                    <input type="submit" asp-action="Index" asp-area="Admin" asp-controller="Movies" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</div>
+
+
