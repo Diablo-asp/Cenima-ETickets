@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Hosting;
+using Cenima_ETickets.ViewModel;
 
 namespace Cenima_ETickets.Data
 {

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata.Ecma335;
 
 namespace Cenima_ETickets.Models
@@ -6,11 +7,13 @@ namespace Cenima_ETickets.Models
     public class Movie
     {
         public int Id { get; set; }
+        [Required]
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
+        [Required]
         public double Price { get; set; }
         public string ImgUrl { get; set; }
-        public string TrairlerUrl { get; set; }
+        public string? TrairlerUrl { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         [NotMapped]
@@ -28,10 +31,11 @@ namespace Cenima_ETickets.Models
                     return MovieStatus.Expired;
             }
         }
-
+        [Required]
         public int CenimaId { get; set; }
+        [Required]
         public int CategoryId { get; set; }
-
+        
         public Cenima cenima { get; set; }
         public Category Category { get; set; }
         public ICollection<Actor> actors { get; set; }
