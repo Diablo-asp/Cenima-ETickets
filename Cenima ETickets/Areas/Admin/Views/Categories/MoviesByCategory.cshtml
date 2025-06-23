@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Cenima_ETickets.Models.Movie>
+@{
+    ViewData["Title"] = "Movies by Category";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Movies in Category: @ViewBag.CategoryName</h2>
+    <hr />
+
+    <div class="row">
+        @foreach (var movie in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="~/images/movies/@movie.ImgUrl" class="card-img-top" alt="@movie.Name" style="height: 250px; object-fit: cover;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@movie.Name</h5>
+                        <p class="card-text"><strong>Price:</strong> @movie.Price.ToString("C")</p>
+                        <p class="card-text"><strong>Cinema:</strong> @movie.cenima.Name</p>
+                        <p>
+                            <strong>Status:</strong>
+                            @switch (movie.CurrentStatus)
+                            {
+                                case MovieStatus.Active:
+                                    <span class="badge bg-success">Active</span>
+                                    break;
+                                case MovieStatus.upcoming:
+                                    <span class="badge bg-warning text-dark">Upcoming</span>
+                                    break;
+                                case MovieStatus.Expired:
+                                    <span class="badge bg-danger">Expired</span>
+                                    break;
+                            }
+                        </p>
+                        <a asp-area="Admin" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-primary btn-sm w-100">
+                            Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

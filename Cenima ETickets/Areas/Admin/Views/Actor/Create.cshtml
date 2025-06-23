@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Add New Actor";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Add New Actor</h2>
+    <hr />
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label">First Name</label>
+            <input type="text" name="FirstName" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Last Name</label>
+            <input type="text" name="LastName" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Bio</label>
+            <textarea name="Bio" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">News</label>
+            <textarea name="News" class="form-control" rows="2"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Profile Picture</label>
+            <input type="file" name="ProfilePic" class="form-control" onchange="previewImage(event)" />
+            <img id="imagePreview" src="#" alt="Image Preview" style="display: none; max-height: 120px; margin-top: 10px;" class="rounded-circle" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Add Actor</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Back</a>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById("imagePreview");
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.src = "#";
+                preview.style.display = "none";
+            }
+        }
+    </script>
+}

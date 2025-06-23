@@ -1,0 +1,27 @@
+﻿@model Cenima_ETickets.Models.Actor
+
+@{
+    ViewData["Title"] = "Movies by Actor";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Movies by @Model.FirstName @Model.LastName</h2>
+    <hr />
+
+    <div class="row">
+        @foreach (var item in Model.ActorMovies)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <img src="~/images/movies/@item.movie.ImgUrl" class="card-img-top" style="height: 200px; object-fit: cover;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@item.movie.Name</h5>
+                        <p class="card-text">@item.movie.Description?.Substring(0, Math.Min(item.movie.Description.Length, 80))...</p>
+                        <a asp-area="Admin" asp-controller="Movies" asp-action="Details" asp-route-id="@item.MovieId" class="btn btn-sm btn-outline-primary w-100">Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

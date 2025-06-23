@@ -8,7 +8,7 @@
 <div class="container mt-4">
     <h2>Create New Movie</h2>
     <hr />
-    <form asp-action="Create" method="post">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-6">
 
@@ -30,7 +30,8 @@
 
                 <div class="mb-3">
                     <label asp-for="Movie.ImgUrl" class="form-label"></label>
-                    <input asp-for="Movie.ImgUrl" class="form-control" />
+                    <input type="file" asp-for="Movie.ImgUrl" class="form-control" name="ImgUrl" id="imageInput" />
+                    <img id="previewImage" src="#" alt="Preview" class="img-thumbnail mt-2 d-none" style="max-height: 250px;" />
                 </div>
 
                 <div class="mb-3">
@@ -91,3 +92,23 @@
         </div>
     </form>
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById("imageInput").addEventListener("change", function (event) {
+            const input = event.target;
+            const preview = document.getElementById("previewImage");
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove("d-none");
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+    </script>
+}

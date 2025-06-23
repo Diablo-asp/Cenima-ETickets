@@ -1,0 +1,33 @@
+﻿@model Cenima_ETickets.Models.Cenima
+
+@{
+    ViewData["Title"] = $"Movies in {Model.Name}";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Movies in @Model.Name</h2>
+    <hr />
+    @if (Model.movies.Any())
+    {
+        <div class="row">
+            @foreach (var movie in Model.movies)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow">
+                        <img src="~/images/movies/@movie.ImgUrl" class="card-img-top" style="height: 200px; object-fit: cover;" />
+                        <div class="card-body">
+                            <h5 class="card-title">@movie.Name</h5>
+                            <p class="card-text">@movie.Description?.Substring(0, Math.Min(100, movie.Description.Length))...</p>
+                            <a asp-area="Admin" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-sm btn-primary">Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">No movies found for this cinema.</div>
+    }
+</div>

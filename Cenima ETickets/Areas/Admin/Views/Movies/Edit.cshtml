@@ -7,7 +7,7 @@
 <div class="container mt-4">
     <h2>Edit Movie</h2>
     <hr />
-    <form asp-action="Edit" method="post">
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="Movie.Id" />
         <div class="row">
             <div class="col-md-6">
@@ -28,9 +28,20 @@
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Movie.ImgUrl" class="form-label"></label>
-                    <input asp-for="Movie.ImgUrl" class="form-control" />
+                    <label asp-for="Movie.ImgUrl" class="form-label">Change Poster (Optional)</label>
+                    <input type="file" class="form-control" name="ImgUrl" />
+
+                    @* عرض الصورة الحالية *@
+                    @if (!string.IsNullOrEmpty(Model.Movie.ImgUrl))
+                    {
+                        <div class="mt-2">
+                            <label class="form-label">Current Image:</label><br />
+                            <img src="~/images/movies/@Model.Movie.ImgUrl" alt="Movie Image"
+                                 class="img-thumbnail" style="max-height: 200px;" />
+                        </div>
+                    }
                 </div>
+
 
                 <div class="mb-3">
                     <label asp-for="Movie.TrairlerUrl" class="form-label"></label>

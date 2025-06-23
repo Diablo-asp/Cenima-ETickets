@@ -59,7 +59,7 @@
                                 <a class="nav-link" href="~/Admin/Cinema/Index">Cinema</a>
                                 <a class="nav-link" href="~/Admin/Actor/Index"> Actors</a>
                                 <a class="nav-link" href="~/Admin/Movies/Index"> Movies</a>
-                                <a class="nav-link" href="~/Admin/Category/Index">Categories</a>
+                                <a class="nav-link" href="~/Admin/Categories/Index">Categories</a>
                             </nav>
                         </div>
 
@@ -113,14 +113,15 @@
         </div>
         <div id="layoutSidenav_content">
             @RenderBody()
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
+            <footer class="bg-dark text-white py-4 mt-auto">
+                <div class="container px-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                            <span>&copy; @DateTime.Now.Year - Cinema E-Tickets. All rights reserved.</span>
+                        </div>
+                        <div class="col-md-6 text-center text-md-end">
+                            <a href="#" class="text-white text-decoration-none me-3">Privacy Policy</a>
+                            <a href="#" class="text-white text-decoration-none">Terms & Conditions</a>
                         </div>
                     </div>
                 </div>

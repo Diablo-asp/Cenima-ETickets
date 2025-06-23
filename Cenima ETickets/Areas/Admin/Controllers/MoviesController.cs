@@ -1,9 +1,11 @@
-﻿using Cenima_ETickets.Data;
+﻿using System.Threading.Tasks;
+using Cenima_ETickets.Data;
 using Cenima_ETickets.Models;
 using Cenima_ETickets.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace Cenima_ETickets.Areas.Admin.Controllers
 {
@@ -94,10 +96,21 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EditMovieVM vm)
+        public async Task<IActionResult> Create(EditMovieVM vm, IFormFile ImgUrl)
         {
 
-            ModelState.Remove("Movie.CurrentStatus");
+            if (ImgUrl is not null && ImgUrl.Length > 0)
+            {
+                var FileName = Guid.NewGuid().ToString() + Path.GetExtension(ImgUrl.FileName);
+                var FilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", FileName);
+
+                using (var stream = System.IO.File.Create(FilePath))
+                {
+                    await ImgUrl.CopyToAsync(stream);
+                }
+                vm.Movie.ImgUrl = FileName; 
+            }
+
 
             _Context.movies.Add(vm.Movie);
             _Context.SaveChanges();
@@ -164,8 +177,29 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(EditMovieVM vm)
+        public async Task<IActionResult> Edit(EditMovieVM vm, IFormFile ImgUrl)
         {
+
+            var ImgInDb = _Context.movies.Find(vm.Movie.Id);
+
+            if (ImgInDb is not null && ImgUrl is not null && ImgUrl.Length > 0)
+            {
+                var FileName = Guid.NewGuid().ToString() + Path.GetExtension(ImgUrl.FileName);
+                var FilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", FileName);
+
+                using (var stream = System.IO.File.Create(FilePath))
+                {
+                    await ImgUrl.CopyToAsync(stream);
+                }
+                var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", ImgInDb.ImgUrl);
+                if(System.IO.File.Exists(oldFilePath))
+                {
+                    System.IO.File.Delete(oldFilePath);
+                }
+                vm.Movie.ImgUrl = FileName;
+            }
+
+
             var movieInDb = _Context.movies
                 .Include(m => m.ActorMovies)
                 .FirstOrDefault(m => m.Id == vm.Movie.Id);
@@ -176,7 +210,10 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
             movieInDb.Name = vm.Movie.Name;
             movieInDb.Description = vm.Movie.Description;
             movieInDb.Price = vm.Movie.Price;
-            movieInDb.ImgUrl = vm.Movie.ImgUrl;
+            if (ImgUrl != null && ImgUrl.Length > 0)
+            {
+                movieInDb.ImgUrl = vm.Movie.ImgUrl;
+            }
             movieInDb.TrairlerUrl = vm.Movie.TrairlerUrl;
             movieInDb.StartDate = vm.Movie.StartDate;
             movieInDb.EndDate = vm.Movie.EndDate;
@@ -203,11 +240,20 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         #region Delete
         public IActionResult Delete(int id)
         {
-            var category = _Context.movies.Find(id);
+            var movie = _Context.movies.FirstOrDefault(m => m.Id == id);
 
-            if (category is not null)
-            {
-                _Context.movies.Remove(category);
+            if (movie is not null)
+            {                
+                if (!string.IsNullOrEmpty(movie.ImgUrl))
+                {
+                    var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/movies", movie.ImgUrl);
+                    if (System.IO.File.Exists(imagePath))
+                    {
+                        System.IO.File.Delete(imagePath);
+                    }
+                }
+                                
+                _Context.movies.Remove(movie);
                 _Context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
@@ -215,6 +261,7 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
 
             return NotFound();
         }
+
         #endregion
     }
 }
