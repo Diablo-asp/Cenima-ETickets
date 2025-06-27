@@ -12,21 +12,25 @@
         <div class="mb-3">
             <label asp-for="Name" class="form-label"></label>
             <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label asp-for="Description" class="form-label"></label>
             <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label asp-for="Address" class="form-label"></label>
             <input asp-for="Address" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Current Logo</label><br />
             <img src="~/images/Cinemas/@Model.CenimaLogo" width="80" class="rounded-circle shadow" />
+            <span asp-validation-for="CenimaLogo" class="text-danger"></span>
         </div>
 
         <div class="mb-3">

@@ -1,6 +1,7 @@
 ﻿using Cenima_ETickets.Data;
 using Cenima_ETickets.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Project;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cenima_ETickets.Areas.Admin.Controllers
@@ -41,29 +42,33 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(string FirstName, string LastName, string Bio, string News, IFormFile ProfilePic)
         {
-            if (ProfilePic != null && ProfilePic.Length > 0)
-            {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfilePic.FileName);
-                var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/cast", fileName);
-
-                using (var stream = new FileStream(savePath, FileMode.Create))
+            if(ModelState.IsValid) {
+                if (ProfilePic != null && ProfilePic.Length > 0)
                 {
-                    await ProfilePic.CopyToAsync(stream);
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfilePic.FileName);
+                    var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/cast", fileName);
+
+                    using (var stream = new FileStream(savePath, FileMode.Create))
+                    {
+                        await ProfilePic.CopyToAsync(stream);
+                    }
+
+                    var newActor = new Actor
+                    {
+                        FirstName = FirstName,
+                        LastName = LastName,
+                        Bio = Bio,
+                        News = News,
+                        ProfilePic = fileName
+                    };
+
+                    _context.actors.Add(newActor);
+                    _context.SaveChanges();
+                    TempData["SuccessMessage"] = "🎉 Actor Create successfully!";
+
+                    return RedirectToAction("Index");
                 }
-
-                var newActor = new Actor
-                {
-                    FirstName = FirstName,
-                    LastName = LastName,
-                    Bio = Bio,
-                    News = News,
-                    ProfilePic = fileName
-                };
-
-                _context.actors.Add(newActor);
-                _context.SaveChanges();
-
-                return RedirectToAction("Index");
+                return View();
             }
             return View();
         }
@@ -80,38 +85,51 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
 
         
         [HttpPost]
-        public async Task<IActionResult> Edit(Actor actor, IFormFile NewProfilePic)
+        public async Task<IActionResult> Edit(int Id,Actor actor, IFormFile? NewProfilePic)
         {
-            var actorInDb = _context.actors.FirstOrDefault(a => a.Id == actor.Id);
-            if (actorInDb == null) return NotFound();
-
-            if (NewProfilePic != null && NewProfilePic.Length > 0)
+            ModelState.Remove("movies");
+            ModelState.Remove("ActorMovies");
+            ModelState.Remove("ProfilePic");
+            
+            if (ModelState.IsValid)
             {
-                var fileName = Guid.NewGuid() + Path.GetExtension(NewProfilePic.FileName);
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/cast", fileName);
+                var actorInDb = _context.actors.FirstOrDefault(a => a.Id == actor.Id);
+                if (actorInDb == null) return NotFound();
 
-                using (var stream = System.IO.File.Create(path))
+                if (NewProfilePic != null && NewProfilePic.Length > 0)
                 {
-                    await NewProfilePic.CopyToAsync(stream);
+                    var fileName = Guid.NewGuid() + Path.GetExtension(NewProfilePic.FileName);
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/cast", fileName);
+
+                    using (var stream = System.IO.File.Create(path))
+                    {
+                        await NewProfilePic.CopyToAsync(stream);
+                    }
+
+                    // حذف الصورة القديمة
+                    var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/cast", actorInDb.ProfilePic ?? "");
+                    if (System.IO.File.Exists(oldPath))
+                    {
+                        System.IO.File.Delete(oldPath);
+                    }
+
+                    actorInDb.ProfilePic = fileName;
                 }
 
-                // حذف الصورة القديمة
-                var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/cast", actorInDb.ProfilePic ?? "");
-                if (System.IO.File.Exists(oldPath))
-                {
-                    System.IO.File.Delete(oldPath);
-                }
+                actorInDb.FirstName = actor.FirstName;
+                actorInDb.LastName = actor.LastName;
+                actorInDb.Bio = actor.Bio;
+                actorInDb.News = actor.News;
 
-                actorInDb.ProfilePic = fileName;
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "🎉 Actor Edit successfully!";
+
+                return RedirectToAction(nameof(Index));
             }
+            var actor1 = _context.actors.Find(Id);
+            if (actor1 == null) return NotFound();
 
-            actorInDb.FirstName = actor.FirstName;
-            actorInDb.LastName = actor.LastName;
-            actorInDb.Bio = actor.Bio;
-            actorInDb.News = actor.News;
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return View(actor1);
         }
         #endregion
 
@@ -129,6 +147,7 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
 
             _context.actors.Remove(actor);
             _context.SaveChanges();
+            TempData["SuccessMessage"] = "🎉 Actor Delete successfully!";
 
             return RedirectToAction(nameof(Index));
         }

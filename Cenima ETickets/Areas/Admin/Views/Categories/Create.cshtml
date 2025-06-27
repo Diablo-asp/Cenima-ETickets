@@ -1,4 +1,7 @@
-﻿@{
+﻿@model Category
+
+
+@{
     ViewData["Title"] = "Create Category";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
@@ -11,11 +14,13 @@
         <div class="mb-3">
             <label class="form-label">Category Name</label>
             <input type="text" name="Name" class="form-control" required />
+            <span asp-validation-for="Name" class="text-denger"></span>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Category Image</label>
-            <input type="file" name="CategoryImage" class="form-control" id="categoryImageInput" required />
+            <input type="file" name="CategoryUrl" class="form-control" id="categoryImageInput" required />
+            <span asp-validation-for="CategoryUrl" class="text-denger"></span>
         </div>
 
         <div class="mb-3">

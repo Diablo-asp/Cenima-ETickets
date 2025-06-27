@@ -21,12 +21,16 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new Cenima());
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(string Name, string Description, string Address, IFormFile CenimaLogo)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(new Cenima());
+            }
             if (CenimaLogo != null && CenimaLogo.Length > 0)
             {
                 var fileName = Guid.NewGuid().ToString() + Path.GetExtension(CenimaLogo.FileName);
@@ -45,11 +49,11 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
 
                 _context.cenimas.Add(cinema);
                 _context.SaveChanges();
+                TempData["SuccessMessage"] = "🎉 Cinema created successfully!";
+
                 return RedirectToAction("Index");
             }
-
-            ModelState.AddModelError("", "Logo is required.");
-            return View();
+            return View(new Cenima());
         }
         #endregion
 
@@ -79,35 +83,46 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Cenima model, IFormFile? CenimaLogo)
         {
-            var cinemaInDb = _context.cenimas.FirstOrDefault(c => c.Id == id);
-            if (cinemaInDb is null) return NotFound();
-
-            // لو تم رفع صورة جديدة
-            if (CenimaLogo != null && CenimaLogo.Length > 0)
+            ModelState.Remove("CenimaLogo");
+            ModelState.Remove("movies");
+            if (ModelState.IsValid)
             {
-                var newFileName = Guid.NewGuid().ToString() + Path.GetExtension(CenimaLogo.FileName);
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Cinemas", newFileName);
+                var cinemaInDb = _context.cenimas.FirstOrDefault(c => c.Id == id);
+                if (cinemaInDb is null) return NotFound();
 
-                using (var stream = new FileStream(path, FileMode.Create))
+                // لو تم رفع صورة جديدة
+                if (CenimaLogo != null && CenimaLogo.Length > 0)
                 {
-                    await CenimaLogo.CopyToAsync(stream);
+                    var newFileName = Guid.NewGuid().ToString() + Path.GetExtension(CenimaLogo.FileName);
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Cinemas", newFileName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await CenimaLogo.CopyToAsync(stream);
+                    }
+
+                    // احذف الصورة القديمة
+                    var oldPath = Path.Combine("wwwroot/images/Cinemas", cinemaInDb.CenimaLogo);
+                    if (System.IO.File.Exists(oldPath))
+                        System.IO.File.Delete(oldPath);
+
+                    cinemaInDb.CenimaLogo = newFileName;
                 }
 
-                // احذف الصورة القديمة
-                var oldPath = Path.Combine("wwwroot/images/Cinemas", cinemaInDb.CenimaLogo);
-                if (System.IO.File.Exists(oldPath))
-                    System.IO.File.Delete(oldPath);
+                // تحديث البيانات
+                cinemaInDb.Name = model.Name;
+                cinemaInDb.Description = model.Description;
+                cinemaInDb.Address = model.Address;
 
-                cinemaInDb.CenimaLogo = newFileName;
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "🎉 Cinema Edit successfully!";
+
+                return RedirectToAction("Index");
             }
+            var cinema = _context.cenimas.FirstOrDefault(c => c.Id == id);
+            if (cinema is null) return NotFound();
 
-            // تحديث البيانات
-            cinemaInDb.Name = model.Name;
-            cinemaInDb.Description = model.Description;
-            cinemaInDb.Address = model.Address;
-
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            return View(cinema);
         }
         #endregion
 
@@ -124,6 +139,7 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
 
             _context.cenimas.Remove(cinema);
             _context.SaveChanges();
+            TempData["SuccessMessage"] = "🎉 Cinema Delete successfully!";
 
             return RedirectToAction("Index");
         }

@@ -98,38 +98,52 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EditMovieVM vm, IFormFile ImgUrl)
         {
-
-            if (ImgUrl is not null && ImgUrl.Length > 0)
+            //ModelState.Remove("ImgUrl");
+            ModelState.Remove("Movie.ImgUrl");
+            ModelState.Remove("AllActors");
+            ModelState.Remove("Movie.ActorMovies");
+            if (ModelState.IsValid)
             {
-                var FileName = Guid.NewGuid().ToString() + Path.GetExtension(ImgUrl.FileName);
-                var FilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", FileName);
 
-                using (var stream = System.IO.File.Create(FilePath))
+                if (ImgUrl is not null && ImgUrl.Length > 0)
                 {
-                    await ImgUrl.CopyToAsync(stream);
-                }
-                vm.Movie.ImgUrl = FileName; 
-            }
+                    var FileName = Guid.NewGuid().ToString() + Path.GetExtension(ImgUrl.FileName);
+                    var FilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", FileName);
 
-
-            _Context.movies.Add(vm.Movie);
-            _Context.SaveChanges();
-
-            // العلاقة Many-to-Many
-            if (vm.SelectedActorIds.Any())
-            {
-                foreach (var actorId in vm.SelectedActorIds)
-                {
-                    _Context.ActorMovies.Add(new ActorMovie
+                    using (var stream = System.IO.File.Create(FilePath))
                     {
-                        ActorId = actorId,
-                        MovieId = vm.Movie.Id
-                    });
+                        await ImgUrl.CopyToAsync(stream);
+                    }
+                    vm.Movie.ImgUrl = FileName;
                 }
-                _Context.SaveChanges();
-            }
 
-            return RedirectToAction(nameof(Index));
+
+                _Context.movies.Add(vm.Movie);
+                _Context.SaveChanges();
+
+                if (vm.SelectedActorIds.Any())
+                {
+                    foreach (var actorId in vm.SelectedActorIds)
+                    {
+                        _Context.ActorMovies.Add(new ActorMovie
+                        {
+                            ActorId = actorId,
+                            MovieId = vm.Movie.Id
+                        });
+                    }
+                    _Context.SaveChanges();
+                }
+                TempData["SuccessMessage"] = "🎉 Movie created successfully!";
+
+                return RedirectToAction(nameof(Index));
+            }
+             vm = new EditMovieVM
+            {
+                Cenimas = _Context.cenimas.ToList(),
+                Categories = _Context.categories.ToList(),
+                AllActors = _Context.actors.ToList()
+            };
+            return View(vm);
         }
         #endregion
 
@@ -177,62 +191,88 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EditMovieVM vm, IFormFile ImgUrl)
+        public async Task<IActionResult> Edit(int Id,EditMovieVM vm, IFormFile? ImgUrl)
         {
-
-            var ImgInDb = _Context.movies.Find(vm.Movie.Id);
-
-            if (ImgInDb is not null && ImgUrl is not null && ImgUrl.Length > 0)
+            ModelState.Remove("Movie.ImgUrl");
+            ModelState.Remove("AllActors");
+            ModelState.Remove("Movie.ActorMovies");
+            //ModelState.Remove("ImgUrl");
+            if (ModelState.IsValid)
             {
-                var FileName = Guid.NewGuid().ToString() + Path.GetExtension(ImgUrl.FileName);
-                var FilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", FileName);
+                var ImgInDb = _Context.movies.Find(vm.Movie.Id);
 
-                using (var stream = System.IO.File.Create(FilePath))
+                if (ImgInDb is not null && ImgUrl is not null && ImgUrl.Length > 0)
                 {
-                    await ImgUrl.CopyToAsync(stream);
+                    var FileName = Guid.NewGuid().ToString() + Path.GetExtension(ImgUrl.FileName);
+                    var FilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", FileName);
+
+                    using (var stream = System.IO.File.Create(FilePath))
+                    {
+                        await ImgUrl.CopyToAsync(stream);
+                    }
+                    var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", ImgInDb.ImgUrl);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                    vm.Movie.ImgUrl = FileName;
                 }
-                var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", ImgInDb.ImgUrl);
-                if(System.IO.File.Exists(oldFilePath))
+
+
+                var movieInDb = _Context.movies
+                    .Include(m => m.ActorMovies)
+                    .FirstOrDefault(m => m.Id == vm.Movie.Id);
+
+                if (movieInDb == null) return NotFound();
+
+                // تحديث بيانات الفيلم الأساسية
+                movieInDb.Name = vm.Movie.Name;
+                movieInDb.Description = vm.Movie.Description;
+                movieInDb.Price = vm.Movie.Price;
+                if (ImgUrl != null && ImgUrl.Length > 0)
                 {
-                    System.IO.File.Delete(oldFilePath);
+                    movieInDb.ImgUrl = vm.Movie.ImgUrl;
                 }
-                vm.Movie.ImgUrl = FileName;
+                movieInDb.TrairlerUrl = vm.Movie.TrairlerUrl;
+                movieInDb.StartDate = vm.Movie.StartDate;
+                movieInDb.EndDate = vm.Movie.EndDate;
+                movieInDb.CenimaId = vm.Movie.CenimaId;
+                movieInDb.CategoryId = vm.Movie.CategoryId;
+
+                // تحديث الممثلين
+                _Context.ActorMovies.RemoveRange(movieInDb.ActorMovies);
+                foreach (var actorId in vm.SelectedActorIds)
+                {
+                    _Context.ActorMovies.Add(new ActorMovie
+                    {
+                        MovieId = movieInDb.Id,
+                        ActorId = actorId
+                    });
+                }
+
+                _Context.SaveChanges();
+                TempData["SuccessMessage"] = "🎉 Movie Edit successfully!";
+
+                return RedirectToAction("Index");
             }
 
-
-            var movieInDb = _Context.movies
+            var movie = _Context.movies
+                .Include(m => m.Category)
+                .Include(m => m.cenima)
                 .Include(m => m.ActorMovies)
-                .FirstOrDefault(m => m.Id == vm.Movie.Id);
+                .FirstOrDefault(m => m.Id == Id);
 
-            if (movieInDb == null) return NotFound();
+            if (movie == null) return NotFound();
 
-            // تحديث بيانات الفيلم الأساسية
-            movieInDb.Name = vm.Movie.Name;
-            movieInDb.Description = vm.Movie.Description;
-            movieInDb.Price = vm.Movie.Price;
-            if (ImgUrl != null && ImgUrl.Length > 0)
+             vm = new EditMovieVM
             {
-                movieInDb.ImgUrl = vm.Movie.ImgUrl;
-            }
-            movieInDb.TrairlerUrl = vm.Movie.TrairlerUrl;
-            movieInDb.StartDate = vm.Movie.StartDate;
-            movieInDb.EndDate = vm.Movie.EndDate;
-            movieInDb.CenimaId = vm.Movie.CenimaId;
-            movieInDb.CategoryId = vm.Movie.CategoryId;
-
-            // تحديث الممثلين
-            _Context.ActorMovies.RemoveRange(movieInDb.ActorMovies);
-            foreach (var actorId in vm.SelectedActorIds)
-            {
-                _Context.ActorMovies.Add(new ActorMovie
-                {
-                    MovieId = movieInDb.Id,
-                    ActorId = actorId
-                });
-            }
-
-            _Context.SaveChanges();
-            return RedirectToAction("Index");
+                Movie = movie,
+                Cenimas = _Context.cenimas.ToList(),
+                Categories = _Context.categories.ToList(),
+                AllActors = _Context.actors.ToList(),
+                SelectedActorIds = movie.ActorMovies.Select(am => am.ActorId).ToList()                
+            };
+            return View(vm);
         }
 
         #endregion
@@ -243,7 +283,7 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
             var movie = _Context.movies.FirstOrDefault(m => m.Id == id);
 
             if (movie is not null)
-            {                
+            {
                 if (!string.IsNullOrEmpty(movie.ImgUrl))
                 {
                     var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/movies", movie.ImgUrl);
@@ -252,9 +292,10 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
                         System.IO.File.Delete(imagePath);
                     }
                 }
-                                
+
                 _Context.movies.Remove(movie);
                 _Context.SaveChanges();
+                TempData["SuccessMessage"] = "🎉 Movie Delete successfully!";
 
                 return RedirectToAction(nameof(Index));
             }

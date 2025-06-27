@@ -22,26 +22,32 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(string Name, IFormFile CategoryImage)
+        public async Task<IActionResult> Create(string Name, IFormFile CategoryUrl)
         {
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(CategoryImage.FileName);
-            var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Categorys", fileName);
-
-            using (var stream = new FileStream(savePath, FileMode.Create))
+            if (ModelState.IsValid)
             {
-                await CategoryImage.CopyToAsync(stream);
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(CategoryUrl.FileName);
+                var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Categorys", fileName);
+
+                using (var stream = new FileStream(savePath, FileMode.Create))
+                {
+                    await CategoryUrl.CopyToAsync(stream);
+                }
+
+                var newCategory = new Category
+                {
+                    Name = Name,
+                    CategoryUrl = fileName
+                };
+
+                _context.categories.Add(newCategory);
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "🎉 Category created successfully!";
+
+                return RedirectToAction("Index");
             }
-
-            var newCategory = new Category
-            {
-                Name = Name,
-                CategoryUrl = fileName
-            };
-
-            _context.categories.Add(newCategory);
-            _context.SaveChanges();
-
-            return RedirectToAction("Index");
+            return View();
         }
         #endregion
 
@@ -56,33 +62,42 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, string Name, IFormFile? NewImage)
         {
-            var category = _context.categories.FirstOrDefault(c => c.Id == id);
-            if (category == null) return NotFound();
-
-            category.Name = Name;
-
-            if (NewImage is not null && NewImage.Length > 0)
+            if (ModelState.IsValid)
             {
-                // حذف الصورة القديمة
-                var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Categorys", category.CategoryUrl);
-                if (System.IO.File.Exists(oldPath))
+                var category = _context.categories.FirstOrDefault(c => c.Id == id);
+                if (category == null) return NotFound();
+
+                category.Name = Name;
+
+                if (NewImage is not null && NewImage.Length > 0)
                 {
-                    System.IO.File.Delete(oldPath);
+                    // حذف الصورة القديمة
+                    var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Categorys", category.CategoryUrl);
+                    if (System.IO.File.Exists(oldPath))
+                    {
+                        System.IO.File.Delete(oldPath);
+                    }
+
+                    // حفظ الصورة الجديدة
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(NewImage.FileName);
+                    var newPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Categorys", fileName);
+
+                    using (var stream = new FileStream(newPath, FileMode.Create))
+                    {
+                        await NewImage.CopyToAsync(stream);
+                    }
+
+                    category.CategoryUrl = fileName;
                 }
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "🎉 Category Edit successfully!";
 
-                // حفظ الصورة الجديدة
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(NewImage.FileName);
-                var newPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Categorys", fileName);
-
-                using (var stream = new FileStream(newPath, FileMode.Create))
-                {
-                    await NewImage.CopyToAsync(stream);
-                }
-
-                category.CategoryUrl = fileName;
+                return RedirectToAction("Index");
             }
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            var category1 = _context.categories.FirstOrDefault(c => c.Id == id);
+            if (category1 == null) return NotFound();
+
+            return View(category1);
         }
         #endregion
 
@@ -105,6 +120,7 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
             // حذف التصنيف من قاعدة البيانات
             _context.categories.Remove(category);
             _context.SaveChanges();
+            TempData["SuccessMessage"] = "🎉 Category Delete successfully!";
 
             return RedirectToAction("Index");
         }

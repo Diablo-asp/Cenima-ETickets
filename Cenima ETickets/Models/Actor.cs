@@ -1,13 +1,19 @@
-﻿namespace Cenima_ETickets.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Cenima_ETickets.Models
 {
     public class Actor
     {
         public int Id { get; set; }
+        [Required]
         public string FirstName { get; set; }
+        [Required]
         public string LastName { get; set; }
+        [Required]
         public string Bio { get; set; }
+        [Required]
         public string ProfilePic { get; set; }
-        public string News { get; set; }
+        public string? News { get; set; }
 
 
         public ICollection<Movie> movies { get; set; }
