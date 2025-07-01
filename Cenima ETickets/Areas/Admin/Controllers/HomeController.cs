@@ -8,7 +8,7 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AppcationDbContext _Context = new();
+        private readonly ApplicationDbContext _Context = new();
         [Area("Admin")]
         public IActionResult Index()
         {

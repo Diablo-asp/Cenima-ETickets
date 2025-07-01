@@ -1,5 +1,7 @@
-﻿using Cenima_ETickets.Data;
+﻿using System.Threading.Tasks;
+using Cenima_ETickets.Data;
 using Cenima_ETickets.Models;
+using Cenima_ETickets.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,11 +10,20 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
     [Area("Admin")]
     public class CategoriesController : Controller
     {
-        private AppcationDbContext _context = new();
-        public IActionResult Index()
+        private ApplicationDbContext _context = new();
+        private ICategoryRepository _categoryRepository;// = new();
+
+
+        public CategoriesController(ICategoryRepository categoryRepository)
         {
-            var categories = _context.categories;
-            return View(categories.ToList());
+            _categoryRepository = categoryRepository;
+        }
+
+
+        public async Task<IActionResult> Index()
+        {
+            var categories = await _categoryRepository.GetAsync();
+            return View(categories);
         }
 
         #region Create
@@ -41,8 +52,7 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
                     CategoryUrl = fileName
                 };
 
-                _context.categories.Add(newCategory);
-                _context.SaveChanges();
+               await _categoryRepository.CreateAsync(newCategory);
                 TempData["SuccessMessage"] = "🎉 Category created successfully!";
 
                 return RedirectToAction("Index");
@@ -52,33 +62,32 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         #endregion
 
         #region Edit
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var category = _context.categories.FirstOrDefault(c => c.Id == id);
+            var category = await _categoryRepository.GetOneAsync(e => e.Id == id);
             if (category == null) return NotFound();
 
             return View(category);
         }
+
         [HttpPost]
         public async Task<IActionResult> Edit(int id, string Name, IFormFile? NewImage)
         {
             if (ModelState.IsValid)
             {
-                var category = _context.categories.FirstOrDefault(c => c.Id == id);
+                var category = await _categoryRepository.GetOneAsync(c => c.Id == id);
                 if (category == null) return NotFound();
 
                 category.Name = Name;
 
                 if (NewImage is not null && NewImage.Length > 0)
                 {
-                    // حذف الصورة القديمة
-                    var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Categorys", category.CategoryUrl);
+                    var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Categorys", category.CategoryUrl ?? "");
                     if (System.IO.File.Exists(oldPath))
                     {
                         System.IO.File.Delete(oldPath);
                     }
 
-                    // حفظ الصورة الجديدة
                     var fileName = Guid.NewGuid().ToString() + Path.GetExtension(NewImage.FileName);
                     var newPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Categorys", fileName);
 
@@ -89,60 +98,58 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
 
                     category.CategoryUrl = fileName;
                 }
-                _context.SaveChanges();
-                TempData["SuccessMessage"] = "🎉 Category Edit successfully!";
 
+                await _categoryRepository.UpdateAsync(category);
+                TempData["SuccessMessage"] = "🎉 Category edited successfully!";
                 return RedirectToAction("Index");
             }
-            var category1 = _context.categories.FirstOrDefault(c => c.Id == id);
-            if (category1 == null) return NotFound();
 
-            return View(category1);
+            var fallbackCategory = await _categoryRepository.GetOneAsync(e => e.Id == id);
+            return fallbackCategory is null ? NotFound() : View(fallbackCategory);
         }
+
         #endregion
 
         #region Delete
         [HttpPost]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var category = _context.categories.FirstOrDefault(c => c.Id == id);
-            if (category is null) return NotFound();
+            var category = await _categoryRepository.GetOneAsync(e => e.Id == id);
+            if (category == null) return NotFound();
 
-            // مسار الصورة
-            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Categorys", category.CategoryUrl);
-
-            // حذف الصورة من السيرفر لو موجودة
-            if (System.IO.File.Exists(imagePath))
+            if (!string.IsNullOrEmpty(category.CategoryUrl))
             {
-                System.IO.File.Delete(imagePath);
+                var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/Categorys", category.CategoryUrl);
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
             }
 
-            // حذف التصنيف من قاعدة البيانات
-            _context.categories.Remove(category);
-            _context.SaveChanges();
-            TempData["SuccessMessage"] = "🎉 Category Delete successfully!";
-
+            await _categoryRepository.DeleteAsync(category);
+            TempData["SuccessMessage"] = "🎉 Category deleted successfully!";
             return RedirectToAction("Index");
         }
+
         #endregion
 
         #region Movie By Category
-        public IActionResult MoviesByCategory(int id)
-        {
-            var category = _context.categories.FirstOrDefault(c => c.Id == id);
-            if (category == null)
-                return NotFound();
+        //public IActionResult MoviesByCategory(int id)
+        //{
+        //    var category = _categoryRepository.GetOneAsync(e => e.Id == id);
+        //    if (category == null)
+        //        return NotFound();
 
-            var movies = _context.movies
-                .Include(m => m.cenima)
-                .Include(m => m.Category)
-                .Where(m => m.CategoryId == id)
-                .ToList();
+        //    var movies = _context.movies
+        //        .Include(m => m.cenima)
+        //        .Include(m => m.Category)
+        //        .Where(m => m.CategoryId == id)
+        //        .ToList();
 
-            ViewBag.CategoryName = category.Name;
+        //    ViewBag.CategoryName = category.Name;
 
-            return View(movies);
-        }
+        //    return View(movies);
+        //}
         #endregion
     }
 }

@@ -1,0 +1,6 @@
+﻿namespace Cenima_ETickets.Repositories.IRepositories
+{
+    public interface IActorRepository : IRepository<Actor>
+    {
+    }
+}

@@ -1,3 +1,6 @@
+
+using Microsoft.EntityFrameworkCore;
+
 namespace Cenima_ETickets
 {
     public class Program
@@ -8,6 +11,17 @@ namespace Cenima_ETickets
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<ApplicationDbContext>(
+                option => option.UseSqlServer("Data Source=.;DataBase=Cenima_ETickets;Integrated Security=True;" +
+                                "Trust Server Certificate=True")
+                );
+
+            builder.Services.AddScoped<ICategoryRepository ,CategoryRepository>();
+            builder.Services.AddScoped<ICinemaRepository ,CinemaRepository>();
+            builder.Services.AddScoped<IActorRepository ,ActorRepository>();
+            builder.Services.AddScoped<IMovieRepository ,MovieRepository>();
+
 
             var app = builder.Build();
 

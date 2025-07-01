@@ -6,13 +6,23 @@ using Cenima_ETickets.ViewModel;
 
 namespace Cenima_ETickets.Data
 {
-    public class AppcationDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+            
+        }
+
         public DbSet<Movie> movies { get; set; }
         public DbSet<Category> categories { get; set; }
         public DbSet<Cenima> cenimas { get; set; }
         public DbSet<Actor> actors { get; set; }
         public DbSet<ActorMovie> ActorMovies { get; set; }
+
+        public ApplicationDbContext()
+        {            
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);

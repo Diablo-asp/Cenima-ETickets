@@ -13,7 +13,7 @@ namespace Cenima_ETickets.Models
         public string? Description { get; set; }
         [Required]
         public double Price { get; set; }
-        [Required]
+        [Required(ErrorMessage ="You need to Upload Photo") ]        
         public string ImgUrl { get; set; }
         public string? TrairlerUrl { get; set; }
         [Required]

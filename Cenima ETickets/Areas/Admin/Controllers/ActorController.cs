@@ -9,29 +9,36 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
     [Area("Admin")]
     public class ActorController : Controller
     {
-        private AppcationDbContext _context = new();
+        private IActorRepository _actorRepository;
+        private ApplicationDbContext _context = new();
+
+        public ActorController(IActorRepository actorRepository)
+        {
+            _actorRepository = actorRepository;
+        }
+
         #region Index
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var actors = _context.actors;
-            return View(actors.ToList());
+            var actors = await _actorRepository.GetAsync();
+            return View(actors);
         }
         #endregion
 
-        #region movie by actor
-        public IActionResult MoviesByActor(int id)
-        {
-            var actor = _context.actors
-                .Include(a => a.ActorMovies)
-                .ThenInclude(am => am.movie)
-                .FirstOrDefault(a => a.Id == id);
+        //#region movie by actor
+        //public IActionResult MoviesByActor(int id)
+        //{
+        //    var actor = await _actorRepository
+        //        .Include(a => a.ActorMovies)
+        //        .ThenInclude(am => am.movie)
+        //        .FirstOrDefault(a => a.Id == id);
 
-            if (actor == null)
-                return NotFound();
+        //    if (actor == null)
+        //        return NotFound();
 
-            return View(actor);
-        }
-        #endregion
+        //    return View(actor);
+        //}
+        //#endregion
 
         #region Create
         public IActionResult Create()
@@ -62,8 +69,7 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
                         ProfilePic = fileName
                     };
 
-                    _context.actors.Add(newActor);
-                    _context.SaveChanges();
+                    await _actorRepository.CreateAsync(newActor);
                     TempData["SuccessMessage"] = "🎉 Actor Create successfully!";
 
                     return RedirectToAction("Index");
@@ -75,9 +81,9 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         #endregion
 
         #region Edit
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var actor = _context.actors.Find(id);
+            var actor = await _actorRepository.GetOneAsync(e => e.Id == id);
             if (actor == null) return NotFound();
 
             return View(actor);
@@ -93,7 +99,7 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
             
             if (ModelState.IsValid)
             {
-                var actorInDb = _context.actors.FirstOrDefault(a => a.Id == actor.Id);
+                var actorInDb = await _actorRepository.GetOneAsync(a => a.Id == actor.Id);
                 if (actorInDb == null) return NotFound();
 
                 if (NewProfilePic != null && NewProfilePic.Length > 0)
@@ -120,13 +126,12 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
                 actorInDb.LastName = actor.LastName;
                 actorInDb.Bio = actor.Bio;
                 actorInDb.News = actor.News;
-
-                await _context.SaveChangesAsync();
+                await _actorRepository.UpdateAsync(actorInDb);
                 TempData["SuccessMessage"] = "🎉 Actor Edit successfully!";
 
                 return RedirectToAction(nameof(Index));
             }
-            var actor1 = _context.actors.Find(Id);
+            var actor1 = await _actorRepository.GetOneAsync(e => e.Id == Id);
             if (actor1 == null) return NotFound();
 
             return View(actor1);
@@ -134,9 +139,9 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         #endregion
 
         #region Delete
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var actor = _context.actors.Find(id);
+            var actor = await _actorRepository.GetOneAsync(e => e.Id == id);
             if (actor == null) return NotFound();
 
             var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/cast", actor.ProfilePic ?? "");
@@ -145,8 +150,7 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
                 System.IO.File.Delete(imagePath);
             }
 
-            _context.actors.Remove(actor);
-            _context.SaveChanges();
+            await _actorRepository.DeleteAsync(actor);
             TempData["SuccessMessage"] = "🎉 Actor Delete successfully!";
 
             return RedirectToAction(nameof(Index));

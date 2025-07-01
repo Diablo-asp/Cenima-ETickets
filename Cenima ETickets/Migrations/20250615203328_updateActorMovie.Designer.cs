@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Cenima_ETickets.Migrations
 {
-    [DbContext(typeof(AppcationDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20250615203328_updateActorMovie")]
     partial class updateActorMovie
     {

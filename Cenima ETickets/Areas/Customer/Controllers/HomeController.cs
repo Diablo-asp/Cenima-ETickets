@@ -11,7 +11,7 @@ namespace Cenima_ETickets.Areas.Customers.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private AppcationDbContext _Context = new();
+        private ApplicationDbContext _Context = new();
 
         public HomeController(ILogger<HomeController> logger)
         {

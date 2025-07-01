@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Cenima_ETickets.Migrations
 {
-    [DbContext(typeof(AppcationDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20250614184535_InitialCreate")]
     partial class InitialCreate
     {

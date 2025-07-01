@@ -1,4 +1,5 @@
-﻿using Cenima_ETickets.Data;
+﻿using System.Threading.Tasks;
+using Cenima_ETickets.Data;
 using Cenima_ETickets.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,11 +9,18 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
     [Area("Admin")]
     public class CinemaController : Controller
     {
-        private AppcationDbContext _context = new();
-        #region Index
-        public IActionResult Index()
+        private ApplicationDbContext _context = new();
+        private ICinemaRepository _cinemarepository;
+
+        public CinemaController(ICinemaRepository cinemaRepository)
         {
-            var cinemas = _context.cenimas.ToList();
+            _cinemarepository = cinemaRepository;
+        }
+
+        #region Index
+        public async Task<IActionResult> Index()
+        {
+            var cinemas = await _cinemarepository.GetAsync();
             return View(cinemas);
         }
         #endregion
@@ -47,8 +55,7 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
                     CenimaLogo = fileName
                 };
 
-                _context.cenimas.Add(cinema);
-                _context.SaveChanges();
+                await _cinemarepository.CreateAsync(cinema);
                 TempData["SuccessMessage"] = "🎉 Cinema created successfully!";
 
                 return RedirectToAction("Index");
@@ -57,24 +64,24 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         }
         #endregion
 
-        #region movie by cinema
-        public IActionResult MoviesByCinema(int id)
-        {
-            var cinema = _context.cenimas
-                .Include(c => c.movies)
-                .ThenInclude(m => m.Category)
-                .FirstOrDefault(c => c.Id == id);
+        //#region movie by cinema // No Repo For Movie yet
+        //public IActionResult MoviesByCinema(int id)
+        //{
+        //    var cinema = _cinemarepository
+        //        .Include(c => c.movies)
+        //        .ThenInclude(m => m.Category)
+        //        .FirstOrDefault(c => c.Id == id);
 
-            if (cinema == null) return NotFound();
+        //    if (cinema == null) return NotFound();
 
-            return View(cinema);
-        }
-        #endregion
+        //    return View(cinema);
+        //}
+        //#endregion 
 
         #region Edit
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var cinema = _context.cenimas.FirstOrDefault(c => c.Id == id);
+            var cinema = await _cinemarepository.GetOneAsync(c => c.Id == id);
             if (cinema is null) return NotFound();
 
             return View(cinema);
@@ -87,7 +94,7 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
             ModelState.Remove("movies");
             if (ModelState.IsValid)
             {
-                var cinemaInDb = _context.cenimas.FirstOrDefault(c => c.Id == id);
+                var cinemaInDb = await _cinemarepository.GetOneAsync(c => c.Id == id);
                 if (cinemaInDb is null) return NotFound();
 
                 // لو تم رفع صورة جديدة
@@ -114,12 +121,13 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
                 cinemaInDb.Description = model.Description;
                 cinemaInDb.Address = model.Address;
 
-                _context.SaveChanges();
+                await _cinemarepository.UpdateAsync(cinemaInDb);
+
                 TempData["SuccessMessage"] = "🎉 Cinema Edit successfully!";
 
                 return RedirectToAction("Index");
             }
-            var cinema = _context.cenimas.FirstOrDefault(c => c.Id == id);
+            var cinema = await _cinemarepository.GetOneAsync(c => c.Id == id);
             if (cinema is null) return NotFound();
 
             return View(cinema);
@@ -127,9 +135,9 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         #endregion
 
         #region Delete
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var cinema = _context.cenimas.FirstOrDefault(c => c.Id == id);
+            var cinema = await _cinemarepository.GetOneAsync(c => c.Id == id);
             if (cinema is null) return NotFound();
 
             // حذف الصورة من المجلد
@@ -137,8 +145,7 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
             if (System.IO.File.Exists(imagePath))
                 System.IO.File.Delete(imagePath);
 
-            _context.cenimas.Remove(cinema);
-            _context.SaveChanges();
+            await _cinemarepository.DeleteAsync(cinema);
             TempData["SuccessMessage"] = "🎉 Cinema Delete successfully!";
 
             return RedirectToAction("Index");
