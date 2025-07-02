@@ -1,17 +1,19 @@
-﻿using System.Linq;
-using System.Linq.Expressions;
-using Cenima_ETickets.Data;
-using Cenima_ETickets.Models;
-using Cenima_ETickets.ViewModel;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace Cenima_ETickets.Repositories
+public class CinemaRepository : Repository<Cenima>, ICinemaRepository
 {
-    public class CinemaRepository : Repository<Cenima>, ICinemaRepository
-    {
+    private readonly ApplicationDbContext _context;
 
-        public CinemaRepository(ApplicationDbContext context) : base(context)
-        {            
-        }
+    public CinemaRepository(ApplicationDbContext context) : base(context)
+    {
+        _context = context;
+    }
+
+    public async Task<Cenima?> GetCinemaWithMoviesAsync(int id)
+    {
+        return await _context.cenimas
+            .Include(c => c.movies)
+            .ThenInclude(m => m.Category)
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
 }

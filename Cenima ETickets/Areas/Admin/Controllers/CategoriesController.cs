@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Cenima_ETickets.Data;
 using Cenima_ETickets.Models;
 using Cenima_ETickets.Repositories;
@@ -12,11 +13,14 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
     {
         private ApplicationDbContext _context = new();
         private ICategoryRepository _categoryRepository;// = new();
+        private IMovieRepository _movieRepository;// = new();
 
 
-        public CategoriesController(ICategoryRepository categoryRepository)
+
+        public CategoriesController(ICategoryRepository categoryRepository, IMovieRepository movieRepository)
         {
             _categoryRepository = categoryRepository;
+            _movieRepository = movieRepository;
         }
 
 
@@ -134,22 +138,25 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         #endregion
 
         #region Movie By Category
-        //public IActionResult MoviesByCategory(int id)
-        //{
-        //    var category = _categoryRepository.GetOneAsync(e => e.Id == id);
-        //    if (category == null)
-        //        return NotFound();
+        public async Task<IActionResult> MoviesByCategory(int id)
+        {
+            // هات الكاتجوري
+            var category = await _categoryRepository.GetOneAsync(c => c.Id == id);
+            if (category == null)
+                return NotFound();
 
-        //    var movies = _context.movies
-        //        .Include(m => m.cenima)
-        //        .Include(m => m.Category)
-        //        .Where(m => m.CategoryId == id)
-        //        .ToList();
+            // هات الأفلام المرتبطة بيه مع السينما والتصنيف
+            var includes = new Expression<Func<Movie, object>>[]
+            {
+            m => m.cenima!,
+            m => m.Category!
+            };
 
-        //    ViewBag.CategoryName = category.Name;
+            var movies = await _movieRepository.GetAsync(m => m.CategoryId == id, includes);
 
-        //    return View(movies);
-        //}
+            ViewBag.CategoryName = category.Name;
+            return View(movies);
+        }
         #endregion
     }
 }

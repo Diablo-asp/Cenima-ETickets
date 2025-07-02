@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Cenima_ETickets.Data;
 using Cenima_ETickets.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -64,19 +65,18 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         }
         #endregion
 
-        //#region movie by cinema // No Repo For Movie yet
-        //public IActionResult MoviesByCinema(int id)
-        //{
-        //    var cinema = _cinemarepository
-        //        .Include(c => c.movies)
-        //        .ThenInclude(m => m.Category)
-        //        .FirstOrDefault(c => c.Id == id);
+        #region movie by cinema // No Repo For Movie yet
+        public async Task<IActionResult> MoviesByCinema(int id)
+        {
+            var cinema = await _cinemarepository.GetCinemaWithMoviesAsync(id);
 
-        //    if (cinema == null) return NotFound();
+            if (cinema == null)
+                return NotFound();
 
-        //    return View(cinema);
-        //}
-        //#endregion 
+            return View(cinema);
+        }
+
+        #endregion 
 
         #region Edit
         public async Task<IActionResult> Edit(int id)

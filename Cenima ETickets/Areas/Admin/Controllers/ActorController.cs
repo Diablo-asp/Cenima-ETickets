@@ -25,20 +25,18 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
         }
         #endregion
 
-        //#region movie by actor
-        //public IActionResult MoviesByActor(int id)
-        //{
-        //    var actor = await _actorRepository
-        //        .Include(a => a.ActorMovies)
-        //        .ThenInclude(am => am.movie)
-        //        .FirstOrDefault(a => a.Id == id);
+        #region movie by actor
+        public async Task<IActionResult> MoviesByActor(int id)
+        {
+            var actor = await _actorRepository.GetActorWithMoviesAsync(id);
 
-        //    if (actor == null)
-        //        return NotFound();
+            if (actor == null)
+                return NotFound();
 
-        //    return View(actor);
-        //}
-        //#endregion
+            return View(actor);
+        }
+
+        #endregion
 
         #region Create
         public IActionResult Create()

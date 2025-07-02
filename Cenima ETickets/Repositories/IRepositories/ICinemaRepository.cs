@@ -1,6 +1,6 @@
-﻿namespace Cenima_ETickets.Repositories.IRepositories
+﻿using System.Linq.Expressions;
+
+public interface ICinemaRepository : IRepository<Cenima>
 {
-    public interface ICinemaRepository : IRepository<Cenima>
-    {
-    }
+    Task<Cenima?> GetCinemaWithMoviesAsync(int id);
 }
