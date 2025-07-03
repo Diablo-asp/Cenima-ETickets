@@ -3,15 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Hosting;
 using Cenima_ETickets.ViewModel;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Cenima_ETickets.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
-        {
-            
+        {            
         }
 
         public DbSet<Movie> movies { get; set; }
@@ -21,7 +21,7 @@ namespace Cenima_ETickets.Data
         public DbSet<ActorMovie> ActorMovies { get; set; }
 
         public ApplicationDbContext()
-        {            
+        {
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,7 +32,7 @@ namespace Cenima_ETickets.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ActorMovie>()
+            modelBuilder.Entity<ActorMovie>() 
                 .HasKey(am => new { am.ActorId, am.MovieId });
 
             modelBuilder.Entity<Actor>()

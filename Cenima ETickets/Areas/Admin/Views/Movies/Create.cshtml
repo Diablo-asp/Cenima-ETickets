@@ -11,7 +11,7 @@
     <form asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-6">
-
+                <div asp-validation-summary="All" class="text-denger"></div>
                 @* Basic Movie Info *@
                 <div class="mb-3">
                     <label asp-for="Movie.Name" class="form-label"></label>

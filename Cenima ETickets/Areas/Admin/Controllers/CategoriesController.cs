@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Cenima_ETickets.Data;
 using Cenima_ETickets.Models;
 using Cenima_ETickets.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,8 @@ namespace Cenima_ETickets.Areas.Admin.Controllers
     [Area("Admin")]
     public class CategoriesController : Controller
     {
+        IdentityUser _userManager = new IdentityUser();
+
         private ApplicationDbContext _context = new();
         private ICategoryRepository _categoryRepository;// = new();
         private IMovieRepository _movieRepository;// = new();

@@ -9,6 +9,7 @@
     <hr />
     <form asp-action="Edit" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="Movie.Id" />
+        <div asp-validation-summary="All" class="text-denger"></div>
         <div class="row">
             <div class="col-md-6">
                 <div class="mb-3">

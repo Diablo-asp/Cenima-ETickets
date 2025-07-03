@@ -142,7 +142,8 @@ namespace Cenima_ETickets.Repositories
                 .Include(m => m.ActorMovies)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (movie == null) return null;
+            if (movie == null)
+                return null;
 
             return new EditMovieVM
             {
