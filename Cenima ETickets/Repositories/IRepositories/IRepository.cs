@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Linq;
 
-namespace Cenima_ETickets.Repositories.IRepositories
+namespace Cinema_ETickets.Repositories.IRepositories
 {
     public interface IRepository<T> where T : class
     {

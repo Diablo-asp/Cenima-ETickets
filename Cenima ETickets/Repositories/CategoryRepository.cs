@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
-using Cenima_ETickets.Data;
-using Cenima_ETickets.Models;
-using Cenima_ETickets.ViewModel;
+using Cinema_ETickets.Data;
+using Cinema_ETickets.Models;
+using Cinema_ETickets.ViewModel;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cenima_ETickets.Repositories
+namespace Cinema_ETickets.Repositories
 {
     public class CategoryRepository : Repository<Category>, ICategoryRepository
     {

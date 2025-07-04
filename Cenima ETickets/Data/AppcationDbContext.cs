@@ -1,11 +1,11 @@
-﻿using Cenima_ETickets.Models;
+﻿using Cinema_ETickets.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Hosting;
-using Cenima_ETickets.ViewModel;
+using Cinema_ETickets.ViewModel;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace Cenima_ETickets.Data
+namespace Cinema_ETickets.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -26,12 +26,13 @@ namespace Cenima_ETickets.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Data Source=.;DataBase=Cenima_ETickets;Integrated Security=True;" +
+            optionsBuilder.UseSqlServer("Data Source=.;DataBase=Cinema_ETickets;Integrated Security=True;" +
                                 "Trust Server Certificate=True");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ActorMovie>() 
                 .HasKey(am => new { am.ActorId, am.MovieId });
 
@@ -40,6 +41,7 @@ namespace Cenima_ETickets.Data
                 .WithMany(e => e.actors)
                 .UsingEntity<ActorMovie>();
         }
+        public DbSet<Cinema_ETickets.ViewModel.RegisterVM> RegisterVM { get; set; } = default!;
     
     }
 }

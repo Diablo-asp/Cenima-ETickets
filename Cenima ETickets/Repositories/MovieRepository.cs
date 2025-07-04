@@ -1,9 +1,9 @@
-﻿using Cenima_ETickets.Data;
-using Cenima_ETickets.Models;
-using Cenima_ETickets.Repositories.IRepositories;
+﻿using Cinema_ETickets.Data;
+using Cinema_ETickets.Models;
+using Cinema_ETickets.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cenima_ETickets.Repositories
+namespace Cinema_ETickets.Repositories
 {
     public class MovieRepository : Repository<Movie>, IMovieRepository
     {

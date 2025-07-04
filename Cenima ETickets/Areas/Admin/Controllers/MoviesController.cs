@@ -1,14 +1,14 @@
 ﻿using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Cenima_ETickets.Data;
-using Cenima_ETickets.Models;
-using Cenima_ETickets.ViewModel;
+using Cinema_ETickets.Data;
+using Cinema_ETickets.Models;
+using Cinema_ETickets.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 
-namespace Cenima_ETickets.Areas.Admin.Controllers
+namespace Cinema_ETickets.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class MoviesController : Controller

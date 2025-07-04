@@ -1,7 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Cenima_ETickets
+namespace Cinema_ETickets
 {
     public class Program
     {
@@ -13,7 +13,7 @@ namespace Cenima_ETickets
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<ApplicationDbContext>(
-                option => option.UseSqlServer("Data Source=.;DataBase=Cenima_ETickets;Integrated Security=True;" +
+                option => option.UseSqlServer("Data Source=.;DataBase=Cinema_ETickets;Integrated Security=True;" +
                                 "Trust Server Certificate=True")
                 );
 

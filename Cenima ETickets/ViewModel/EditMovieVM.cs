@@ -1,6 +1,6 @@
-﻿using Cenima_ETickets.Models;
+﻿using Cinema_ETickets.Models;
 
-namespace Cenima_ETickets.ViewModel
+namespace Cinema_ETickets.ViewModel
 {
     public class EditMovieVM
     {

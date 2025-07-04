@@ -2,19 +2,19 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata.Ecma335;
 
-namespace Cenima_ETickets.Models
+namespace Cinema_ETickets.Models
 {
     public class Movie
     {
         public int Id { get; set; }
         [Required]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 50 characters.")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         [Required]
         public double Price { get; set; }
         [Required(ErrorMessage ="You need to Upload Photo") ]        
-        public string ImgUrl { get; set; }
+        public string? ImgUrl { get; set; }
         public string? TrairlerUrl { get; set; }
         [Required]
         public DateTime StartDate { get; set; }
@@ -38,9 +38,9 @@ namespace Cenima_ETickets.Models
         public int CenimaId { get; set; }
         public int CategoryId { get; set; }
         
-        public Cenima? cenima { get; set; }
-        public Category? Category { get; set; }
+        public Cenima cenima { get; set; } = null!;
+        public Category Category { get; set; } = null!;
         public ICollection<Actor>? actors { get; set; }
-        public ICollection<ActorMovie> ActorMovies { get; set; }
+        public ICollection<ActorMovie> ActorMovies { get; set; } = new List<ActorMovie>();
     }
 }

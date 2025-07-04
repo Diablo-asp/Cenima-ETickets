@@ -1,7 +1,7 @@
-﻿global using Cenima_ETickets;
-global using Cenima_ETickets.ViewModel;
-global using Cenima_ETickets.Models;
-global using Cenima_ETickets.Data;
-global using Cenima_ETickets.Repositories;
-global using Cenima_ETickets.Repositories.IRepositories;
+﻿global using Cinema_ETickets;
+global using Cinema_ETickets.ViewModel;
+global using Cinema_ETickets.Models;
+global using Cinema_ETickets.Data;
+global using Cinema_ETickets.Repositories;
+global using Cinema_ETickets.Repositories.IRepositories;
 

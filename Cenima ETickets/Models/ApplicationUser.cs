@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace Cenima_ETickets.Models
+namespace Cinema_ETickets.Models
 {
     public class ApplicationUser : IdentityUser
     {

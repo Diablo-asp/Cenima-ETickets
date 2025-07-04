@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Cenima_ETickets.Models
+namespace Cinema_ETickets.Models
 {
     public class Actor
     {

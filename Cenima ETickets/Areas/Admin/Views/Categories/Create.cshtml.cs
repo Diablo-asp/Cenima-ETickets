@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Cenima_ETickets.Areas.Admin.Views.Categories
+namespace Cinema_ETickets.Areas.Admin.Views.Categories
 {
     public class CreateModel : PageModel
     {

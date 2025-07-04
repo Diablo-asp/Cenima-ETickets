@@ -1,11 +1,11 @@
 using System.Diagnostics;
-using Cenima_ETickets.Data;
-using Cenima_ETickets.Models;
-using Cenima_ETickets.ViewModel;
+using Cinema_ETickets.Data;
+using Cinema_ETickets.Models;
+using Cinema_ETickets.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cenima_ETickets.Areas.Customers.Controllers
+namespace Cinema_ETickets.Areas.Customers.Controllers
 {
     [Area("Customer")]
     public class HomeController : Controller

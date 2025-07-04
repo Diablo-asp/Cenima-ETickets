@@ -1,4 +1,4 @@
-﻿namespace Cenima_ETickets.ViewModel
+﻿namespace Cinema_ETickets.ViewModel
 {
     public class MovieFilterVM
     {

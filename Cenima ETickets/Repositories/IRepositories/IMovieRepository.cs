@@ -1,6 +1,6 @@
-﻿using Cenima_ETickets.Models;
+﻿using Cinema_ETickets.Models;
 
-namespace Cenima_ETickets.Repositories.IRepositories
+namespace Cinema_ETickets.Repositories.IRepositories
 {
     public interface IMovieRepository : IRepository<Movie>
     {

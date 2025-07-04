@@ -1,13 +1,13 @@
 ﻿using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Cenima_ETickets.Data;
-using Cenima_ETickets.Models;
-using Cenima_ETickets.Repositories;
+using Cinema_ETickets.Data;
+using Cinema_ETickets.Models;
+using Cinema_ETickets.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cenima_ETickets.Areas.Admin.Controllers
+namespace Cinema_ETickets.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class CategoriesController : Controller

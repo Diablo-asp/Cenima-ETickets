@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Cenima_ETickets.Models
+namespace Cinema_ETickets.Models
 {
     public class Category
     {
@@ -8,10 +8,10 @@ namespace Cenima_ETickets.Models
         [Required]
         [MaxLength(50)]
         [MinLength(3)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string? CategoryUrl { get; set; }
 
 
-        public ICollection<Movie> movies { get; set; }
+        public ICollection<Movie> movies { get; set; } = new List<Movie>();
     }
 }

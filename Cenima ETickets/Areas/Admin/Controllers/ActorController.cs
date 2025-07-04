@@ -1,10 +1,10 @@
-﻿using Cenima_ETickets.Data;
-using Cenima_ETickets.Models;
+﻿using Cinema_ETickets.Data;
+using Cinema_ETickets.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cenima_ETickets.Areas.Admin.Controllers
+namespace Cinema_ETickets.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class ActorController : Controller
