@@ -1,5 +1,6 @@
 ﻿@model MovieIndexViewModelVM
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +8,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cinema E-Tickets</title>
     <link href="~/css/Customer/styles.css" rel="stylesheet" />
+
+    @if (@TempData["success-notification"] is not null)
+    {
+        @section Scripts {
+        <script>
+            tostr.success('@TempData["success-notification"]')
+        </script>
+    }
+    }
+
+    @if (@TempData["Error-notification"] is not null)
+    {
+        @section Scripts {
+        <script>
+            tostr.error('@TempData["Error-notification"]')
+        </script>
+    }
+
+    }
     <style>
         .card {
             background-color: #1e1e1e;
@@ -87,7 +107,7 @@
         <div class="container-fluid px-0">
             <div id="mainSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
                 <div class="carousel-indicators">
-                    @for (int i = 0; i < Model.SliderMovies.Count; i++)
+                    @for (int i = 0; i < Model.SliderMovies!.Count; i++)
                     {
                         <button type="button" data-bs-target="#mainSlider" data-bs-slide-to="@i"
                                 class="@(i == 0 ? "active" : "")" aria-label="Slide @(i + 1)"></button>

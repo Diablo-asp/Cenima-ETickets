@@ -41,7 +41,7 @@ namespace Cinema_ETickets.Data
                 .WithMany(e => e.actors)
                 .UsingEntity<ActorMovie>();
         }
-        public DbSet<Cinema_ETickets.ViewModel.RegisterVM> RegisterVM { get; set; } = default!;
+        public DbSet<Cinema_ETickets.ViewModel.LoginVM> LoginVM { get; set; } = default!;
     
     }
 }

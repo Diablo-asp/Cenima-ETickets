@@ -1,4 +1,8 @@
 
+using Cinema_ETickets.Utility;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cinema_ETickets
@@ -17,10 +21,19 @@ namespace Cinema_ETickets
                                 "Trust Server Certificate=True")
                 );
 
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
+            {
+                option.Password.RequiredLength = 4;
+            })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
             builder.Services.AddScoped<ICategoryRepository ,CategoryRepository>();
             builder.Services.AddScoped<ICinemaRepository ,CinemaRepository>();
             builder.Services.AddScoped<IActorRepository ,ActorRepository>();
             builder.Services.AddScoped<IMovieRepository ,MovieRepository>();
+
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 
             var app = builder.Build();

@@ -74,6 +74,8 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
             ModelState.Remove("Movie.ImgUrl");
             ModelState.Remove("Movie.ActorMovies");
             ModelState.Remove("AllActors");
+            ModelState.Remove("Movie.Category");
+            ModelState.Remove("Movie.cenima");
             if (!ModelState.IsValid)
             {
                 vm.Categories = await _movieRepository.GetCategoriesAsync();
@@ -138,7 +140,8 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
             ModelState.Remove("Movie.ImgUrl");
             ModelState.Remove("AllActors");
             ModelState.Remove("Movie.ActorMovies");
-
+            ModelState.Remove("Movie.Category");
+            ModelState.Remove("Movie.cenima");
             if (!ModelState.IsValid)
             {
                 vm.Categories = await _movieRepository.GetCategoriesAsync();

@@ -51,7 +51,7 @@ namespace Cinema_ETickets.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("actors");
+                    b.ToTable("actors", (string)null);
                 });
 
             modelBuilder.Entity("Cinema_ETickets.Models.ActorMovie", b =>
@@ -66,7 +66,7 @@ namespace Cinema_ETickets.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("ActorMovies");
+                    b.ToTable("ActorMovies", (string)null);
                 });
 
             modelBuilder.Entity("Cinema_ETickets.Models.ApplicationUser", b =>
@@ -163,7 +163,7 @@ namespace Cinema_ETickets.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("categories");
+                    b.ToTable("categories", (string)null);
                 });
 
             modelBuilder.Entity("Cinema_ETickets.Models.Cenima", b =>
@@ -191,7 +191,7 @@ namespace Cinema_ETickets.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("cenimas");
+                    b.ToTable("cenimas", (string)null);
                 });
 
             modelBuilder.Entity("Cinema_ETickets.Models.Movie", b =>
@@ -238,7 +238,7 @@ namespace Cinema_ETickets.Migrations
 
                     b.HasIndex("CenimaId");
 
-                    b.ToTable("movies");
+                    b.ToTable("movies", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
