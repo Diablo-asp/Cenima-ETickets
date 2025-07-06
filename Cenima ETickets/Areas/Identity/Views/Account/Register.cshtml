@@ -4,6 +4,29 @@
     ViewData["Title"] = "Register";
 }
 
+@if (TempData["success-notification"] is not null)
+{
+    @section Scripts {
+    <script>
+        toastr.error('@TempData["success-notification"]')
+    </script>
+    }
+}
+
+@if (@TempData["error-notification"] is not null)
+{
+    @section Scripts {
+    <script>
+        toastr.error('@TempData["error-notification"]')
+    </script>
+
+    @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+
+    }
+}
+
     <h4>RegisterVM</h4>
     <hr />
     <div class="row">
@@ -52,11 +75,8 @@
         </div>
     </div>
 
-    <div>
-        <a asp-action="Index">Back to List</a>
-    </div>
+<div class="mt-3">
+    <a asp-action="Login" class="btn btn-outline-primary">I Have an Account</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+

@@ -58,9 +58,15 @@
         </div>
     </div>
 
-    <div>
-        <a asp-action="Index">Back to List</a>
-        <a asp-action="Register">Register</a>
+    <div class="d-flex gap-2 mt-3">
+        <a asp-controller="Home" asp-action="Index" asp-area="Customer" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to List
+        </a>
+        <a asp-action="Register" class="btn btn-primary">
+            <i class="fas fa-user-plus me-1"></i> Register
+        </a>
+        <a asp-action="Register" class="btn btn-primary">
+            <i class="fas fa-user-plus me-1"></i> Forget Password 
+        </a>
     </div>
-
 </div>
