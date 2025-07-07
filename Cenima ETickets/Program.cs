@@ -1,5 +1,6 @@
 
 using Cinema_ETickets.Utility;
+using Cinema_ETickets.Utility.DBInitilizer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.CodeAnalysis.Options;
@@ -34,6 +35,7 @@ namespace Cinema_ETickets
             builder.Services.AddScoped<IMovieRepository ,MovieRepository>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
+            builder.Services.AddScoped<IDBInitializer, DBInitializer>();
 
 
             var app = builder.Build();
@@ -56,6 +58,12 @@ namespace Cinema_ETickets
                 name: "default",
                 pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbInitializer = scope.ServiceProvider.GetRequiredService<IDBInitializer>();
+                dbInitializer.Initialize();
+            }
 
             app.Run();
         }
