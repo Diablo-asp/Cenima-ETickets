@@ -11,7 +11,45 @@
     <link href="~/css/admin/styles.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    @section Scripts {
+        @if (TempData["success-notification"] is not null)
+        {
+            <script>
+                toastr.success('@TempData["success-notification"]');
+            </script>
+        }
+
+        @if (TempData["error-notification"] is not null)
+        {
+            <script>
+                toastr.error('@TempData["error-notification"]');
+            </script>
+        }
+    }
+    <style>
+        body.dark-mode .toast-success {
+            background-color: #28a745 !important;
+            color: white !important;
+        }
+
+        body.dark-mode .toast-error {
+            background-color: #dc3545 !important;
+            color: white !important;
+        }
+
+        body.dark-mode .toast-info {
+            background-color: #17a2b8 !important;
+            color: white !important;
+        }
+
+        body.dark-mode .toast-warning {
+            background-color: #ffc107 !important;
+            color: #212529 !important;
+        }
+    </style>
 </head>
+
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->

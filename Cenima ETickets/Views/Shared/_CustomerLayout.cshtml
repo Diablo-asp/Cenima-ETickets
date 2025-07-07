@@ -10,7 +10,23 @@
     <link rel="stylesheet" href="~/Cinema_ETickets.styles.css" asp-append-version="true" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
+    @section Scripts {
+        @if (TempData["success-notification"] is not null)
+        {
+            <script>
+                toastr.success('@TempData["success-notification"]');
+            </script>
+        }
+
+        @if (TempData["error-notification"] is not null)
+        {
+            <script>
+                toastr.error('@TempData["error-notification"]');
+            </script>
+        }
+    }
 </head>
+
 <body>
     <header>
         <!-- ========== Navbar ========== -->
@@ -25,7 +41,7 @@
 
                 <!-- زر الفتح في الموبايل -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -42,14 +58,25 @@
                             <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Cinemas">Cinemas</a>
                         </li>
                     </ul>
-
                     <ul class="navbar-nav flex-grow-3">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Register">Register</a>
-                        </li>
+                        @if(User is not null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="SignOut">Logout</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="Identity" asp-controller="Profile" asp-action="Index">MyProfile</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                        }
                     </ul>
 
                     <!-- زرار الوضع -->
@@ -60,6 +87,26 @@
 
         <!-- ========== CSS ========== -->
         <style>
+            body.dark-mode .toast-success {
+                background-color: #28a745 !important;
+                color: white !important;
+            }
+
+            body.dark-mode .toast-error {
+                background-color: #dc3545 !important;
+                color: white !important;
+            }
+
+            body.dark-mode .toast-info {
+                background-color: #17a2b8 !important;
+                color: white !important;
+            }
+
+            body.dark-mode .toast-warning {
+                background-color: #ffc107 !important;
+                color: #212529 !important;
+            }
+
             body.light-mode {
                 background-color: #f8f9fa;
                 color: #212529;

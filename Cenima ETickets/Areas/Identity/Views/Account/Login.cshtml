@@ -4,33 +4,10 @@
     ViewData["Title"] = "Login";
 }
 
-@if (TempData["success-notification"] is not null)
-{
-    @section Scripts {
-    <script>
-        toastr.error('@TempData["success-notification"]')
-    </script>
-    }
-}
-
-@if (@TempData["error-notification"] is not null)
-{
-    @section Scripts {
-    <script>
-        toastr.error('@TempData["error-notification"]')
-    </script>
-
-    @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
-
-    }
-}
 
 <div class="container">
     <h1>Login</h1>
 
-    <h4>LoginVM</h4>
     <hr />
     <div class="row">
         <div class="col-md-12">
@@ -65,8 +42,22 @@
         <a asp-action="Register" class="btn btn-primary">
             <i class="fas fa-user-plus me-1"></i> Register
         </a>
-        <a asp-action="Register" class="btn btn-primary">
+        <a asp-action="ForgetPassword" class="btn btn-primary">
             <i class="fas fa-user-plus me-1"></i> Forget Password 
         </a>
     </div>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        @if (TempData["success-notification"] != null)
+        {
+            <text>toastr.success('@TempData["success-notification"]');</text>
+        }
+        else if (TempData["error-notification"] != null)
+        {
+            <text>toastr.error('@TempData["error-notification"]');</text>
+        }
+    </script>
+}

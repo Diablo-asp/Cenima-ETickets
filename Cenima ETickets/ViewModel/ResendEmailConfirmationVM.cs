@@ -2,7 +2,7 @@
 
 namespace Cinema_ETickets.ViewModel
 {
-    public class ResendConfirmEmailVM
+    public class ResendEmailConfirmationVM
     {
         public int Id { get; set; }
         [Required]

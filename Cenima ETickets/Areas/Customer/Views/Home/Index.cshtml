@@ -9,24 +9,6 @@
     <title>Cinema E-Tickets</title>
     <link href="~/css/Customer/styles.css" rel="stylesheet" />
 
-    @if (@TempData["success-notification"] is not null)
-    {
-        @section Scripts {
-        <script>
-            tostr.success('@TempData["success-notification"]')
-        </script>
-    }
-    }
-
-    @if (@TempData["Error-notification"] is not null)
-    {
-        @section Scripts {
-        <script>
-            tostr.error('@TempData["Error-notification"]')
-        </script>
-    }
-
-    }
     <style>
         .card {
             background-color: #1e1e1e;
@@ -64,11 +46,11 @@
             border: 1px solid transparent;
         }
 
-        .movie-card:hover {
-            transform: translateY(-10px) scale(1.03);
-            box-shadow: 0 0 20px rgba(0, 123, 255, 0.5);
-            border: 1px solid rgba(0, 123, 255, 0.7);
-        }
+            .movie-card:hover {
+                transform: translateY(-10px) scale(1.03);
+                box-shadow: 0 0 20px rgba(0, 123, 255, 0.5);
+                border: 1px solid rgba(0, 123, 255, 0.7);
+            }
 
         .filter-bar {
             background-color: transparent;
@@ -100,6 +82,7 @@
             }
     </style>
 </head>
+
 <body>
 
     <!-- ===== سلايدر الأفلام ===== -->
@@ -267,6 +250,24 @@
         </div>
     }
 
-    <script src="~/js/Customer/scripts.js"></script>
+
+
+
 </body>
 </html>
+
+@section Scripts {
+    <script src="~/js/Customer/scripts.js"></script>
+    <script>
+        @if (TempData["success-notification"] != null)
+        {
+            <text>toastr.success('@TempData["success-notification"]');</text>
+        }
+        @if (TempData["error-notification"] != null)
+        {
+            <text>toastr.error('@TempData["error-notification"]');</text>
+        }
+    </script>
+
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
