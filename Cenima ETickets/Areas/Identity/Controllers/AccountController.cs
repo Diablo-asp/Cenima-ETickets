@@ -13,8 +13,8 @@ namespace Cinema_ETickets.Areas.Identity.Controllers
     [Area("Identity")]
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         public AccountController(UserManager<ApplicationUser> userManager, IEmailSender emailSender, SignInManager<ApplicationUser> signInManager)
         {
@@ -49,7 +49,7 @@ namespace Cinema_ETickets.Areas.Identity.Controllers
                 Email = registerVM.Email,
                 FirstName = registerVM.FirstName,
                 LastName = registerVM.LastName,
-                Address = registerVM.Adrress
+                Address = registerVM.Address
             };
 
             var result = await _userManager.CreateAsync(user, registerVM.Password);
@@ -58,6 +58,7 @@ namespace Cinema_ETickets.Areas.Identity.Controllers
             if (result.Succeeded)
             {
                 // login the user
+                await _userManager.AddToRoleAsync(user, "Customer");
                 TempData["success-notification"] = "User registered successfully";
 
                 //send Confirmation Email

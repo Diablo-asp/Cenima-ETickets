@@ -2,10 +2,10 @@
 {
     public class SD
     {
-        public static string SuperAdmin = "SuperAdmin";
-        public static string Admin = "Admin";
-        public static string Employe = "Employe";
-        public static string Company = "Company";
-        public static string Customer = "Customer";
+        public const string SuperAdmin = "SuperAdmin";
+        public const string Admin = "Admin";
+        public const string Employe = "Employe";
+        public const string Company = "Company";
+        public const string Customer = "Customer";
     }
 }

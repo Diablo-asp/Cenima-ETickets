@@ -2,12 +2,16 @@
 using System.Threading.Tasks;
 using Cinema_ETickets.Data;
 using Cinema_ETickets.Models;
+using Cinema_ETickets.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cinema_ETickets.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin},{SD.Employe},{SD.Company}")]
+
     public class CinemaController : Controller
     {
         private ApplicationDbContext _context = new();
@@ -28,12 +32,15 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
                 
         #region Create
         [HttpGet]
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
+
         public IActionResult Create()
         {
             return View(new Cenima());
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Create(string Name, string Description, string Address, IFormFile CenimaLogo)
         {
             if (!ModelState.IsValid)
@@ -65,7 +72,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         }
         #endregion
 
-        #region movie by cinema // No Repo For Movie yet
+        #region movie by cinema
         public async Task<IActionResult> MoviesByCinema(int id)
         {
             var cinema = await _cinemarepository.GetCinemaWithMoviesAsync(id);
@@ -79,6 +86,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         #endregion 
 
         #region Edit
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Edit(int id)
         {
             var cinema = await _cinemarepository.GetOneAsync(c => c.Id == id);
@@ -88,6 +96,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Edit(int id, Cenima model, IFormFile? CenimaLogo)
         {
             ModelState.Remove("CenimaLogo");
@@ -135,6 +144,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         #endregion
 
         #region Delete
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Delete(int id)
         {
             var cinema = await _cinemarepository.GetOneAsync(c => c.Id == id);

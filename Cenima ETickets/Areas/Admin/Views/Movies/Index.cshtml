@@ -1,4 +1,5 @@
-﻿@model MovieIndexViewModelVM
+﻿@using Cinema_ETickets.Utility
+@model MovieIndexViewModelVM
 @{
     ViewData["Title"] = "Movies";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -7,10 +8,13 @@
 <div class="container mt-4">
     <h2 class="mb-4">🎬 Manage Movies</h2>
 
-    <!-- زر لإنشاء فيلم جديد -->
-    <p>
-        <a asp-action="Create" class="btn btn-primary">➕ Create New Movie</a>
-    </p>
+    @if(User.IsInRole(SD.SuperAdmin) || User.IsInRole(SD.Admin))
+    {
+        <!-- زر لإنشاء فيلم جديد -->
+        <p>
+            <a asp-action="Create" class="btn btn-primary">➕ Create New Movie</a>
+        </p>
+    }
 
     <!-- جدول عرض الأفلام -->
     <table class="table table-bordered table-hover shadow-sm text-center align-middle">
@@ -57,9 +61,15 @@
                             }
                         </td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-sm btn-warning">Edit</a>
+                            @if (User.IsInRole(SD.SuperAdmin) || User.IsInRole(SD.Admin))
+                            {
+                                 <a asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-sm btn-warning">Edit</a>                                
+                            }
                             <a asp-action="Details" asp-route-id="@movie.Id" class="btn btn-sm btn-info text-white">Details</a>
-                            <a asp-action="Delete" asp-route-id="@movie.Id" class="btn btn-sm btn-danger">Delete</a>
+                            @if (User.IsInRole(SD.SuperAdmin) || User.IsInRole(SD.Admin))
+                            {
+                                <a asp-action="Delete" asp-route-id="@movie.Id" class="btn btn-sm btn-danger">Delete</a>
+                            }
                         </td>
                     </tr>
                 }

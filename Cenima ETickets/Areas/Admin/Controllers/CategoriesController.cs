@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Cinema_ETickets.Data;
 using Cinema_ETickets.Models;
 using Cinema_ETickets.Repositories;
+using Cinema_ETickets.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,15 +12,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Cinema_ETickets.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin},{SD.Employe},{SD.Company}")]
+
     public class CategoriesController : Controller
     {
-        IdentityUser _userManager = new IdentityUser();
-
         private ApplicationDbContext _context = new();
         private ICategoryRepository _categoryRepository;// = new();
         private IMovieRepository _movieRepository;// = new();
-
-
 
         public CategoriesController(ICategoryRepository categoryRepository, IMovieRepository movieRepository)
         {
@@ -34,12 +34,14 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         }
 
         #region Create
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Create(string Name, IFormFile CategoryUrl)
         {
             if (ModelState.IsValid)
@@ -69,6 +71,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         #endregion
 
         #region Edit
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Edit(int id)
         {
             var category = await _categoryRepository.GetOneAsync(e => e.Id == id);
@@ -78,6 +81,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Edit(int id, string Name, IFormFile? NewImage)
         {
             if (ModelState.IsValid)
@@ -119,6 +123,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
 
         #region Delete
         [HttpPost]
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Delete(int id)
         {
             var category = await _categoryRepository.GetOneAsync(e => e.Id == id);

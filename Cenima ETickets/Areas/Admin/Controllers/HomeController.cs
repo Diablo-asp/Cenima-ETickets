@@ -1,15 +1,18 @@
 ﻿using Cinema_ETickets.Data;
 using Cinema_ETickets.Models;
+using Cinema_ETickets.Utility;
 using Cinema_ETickets.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cinema_ETickets.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin},{SD.Employe},{SD.Company}")]
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _Context = new();
-        [Area("Admin")]
         public IActionResult Index()
         {
             var totalMovies = _Context.movies.Count();

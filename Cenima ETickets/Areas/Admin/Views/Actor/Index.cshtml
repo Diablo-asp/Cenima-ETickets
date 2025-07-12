@@ -1,14 +1,18 @@
-﻿@model IEnumerable<Cinema_ETickets.Models.Actor>
+﻿@using Cinema_ETickets.Utility
+@model IEnumerable<Cinema_ETickets.Models.Actor>
 @{
     ViewData["Title"] = "Actors";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Actors</h2>
-        <a asp-action="Create" class="btn btn-success">+ Add Actor</a>
-    </div>
+    @if (User.IsInRole(SD.Admin) || (User.IsInRole(SD.SuperAdmin)))
+    {
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Actors</h2>
+            <a asp-action="Create" class="btn btn-success">+ Add Actor</a>
+        </div>        
+    }
 
     <table class="table table-bordered table-striped table-hover align-middle text-center shadow">
         <thead class="table-dark">
@@ -25,15 +29,18 @@
                 <tr>
                     <td>
                         <img src="~/images/cast/@actor.ProfilePic"
-                             alt="@actor.FirstName"
-                             width="50" height="50"
-                             class="rounded-circle shadow-sm" />
+                        alt="@actor.FirstName"
+                        width="50" height="50"
+                        class="rounded-circle shadow-sm" />
                     </td>
                     <td>@actor.FirstName @actor.LastName</td>
                     <td>@(actor.Bio?.Length > 40 ? actor.Bio.Substring(0, 40) + "..." : actor.Bio)</td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@actor.Id" class="btn btn-sm btn-outline-warning me-1">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@actor.Id" class="btn btn-sm btn-outline-danger me-1">Delete</a>
+                        @if (User.IsInRole(SD.Admin) || (User.IsInRole(SD.SuperAdmin)))
+                        {
+                            <a asp-action="Edit" asp-route-id="@actor.Id" class="btn btn-sm btn-outline-warning me-1">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@actor.Id" class="btn btn-sm btn-outline-danger me-1">Delete</a>                            
+                        }
                         <a asp-action="MoviesByActor" asp-route-id="@actor.Id" class="btn btn-sm btn-outline-primary">Movies</a>
                     </td>
                 </tr>

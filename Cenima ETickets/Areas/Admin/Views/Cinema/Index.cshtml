@@ -1,14 +1,18 @@
-﻿@model IEnumerable<Cinema_ETickets.Models.Cenima>
+﻿@using Cinema_ETickets.Utility
+@model IEnumerable<Cinema_ETickets.Models.Cenima>
 @{
     ViewData["Title"] = "Cinemas";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Cinemas</h2>
-        <a asp-action="Create" class="btn btn-primary">Add New Cinema</a>
-    </div>
+    @if(User.IsInRole(SD.Admin) || (User.IsInRole(SD.SuperAdmin)))
+    {
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Cinemas</h2>
+            <a asp-action="Create" class="btn btn-primary">Add New Cinema</a>
+        </div>
+    }
 
     <table class="table table-bordered table-hover">
         <thead class="table-dark">
@@ -31,8 +35,11 @@
                     <td>@(cinema.Description?.Length > 70 ? cinema.Description.Substring(0, 70) + "..." : cinema.Description)</td>
                     <td>@cinema.Address</td>
                     <td>
+                        @if (User.IsInRole(SD.Admin) || (User.IsInRole(SD.SuperAdmin)))
+                        {
                         <a asp-action="Edit" asp-route-id="@cinema.Id" class="btn btn-sm btn-warning">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@cinema.Id" class="btn btn-sm btn-danger">Delete</a>
+                        <a asp-action="Delete" asp-route-id="@cinema.Id" class="btn btn-sm btn-danger">Delete</a>                            
+                        }
                         <a asp-action="MoviesByCinema" asp-route-id="@cinema.Id" class="btn btn-sm btn-info">Movies</a>
                     </td>
                 </tr>

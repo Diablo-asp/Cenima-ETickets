@@ -1,5 +1,7 @@
 ﻿using Cinema_ETickets.Data;
 using Cinema_ETickets.Models;
+using Cinema_ETickets.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Cinema_ETickets.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin},{SD.Employe},{SD.Company}")]
+
     public class ActorController : Controller
     {
         private IActorRepository _actorRepository;
@@ -39,12 +43,15 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         #endregion
 
         #region Create
+
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Create(string FirstName, string LastName, string Bio, string News, IFormFile ProfilePic)
         {
             if(ModelState.IsValid) {
@@ -79,6 +86,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         #endregion
 
         #region Edit
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Edit(int id)
         {
             var actor = await _actorRepository.GetOneAsync(e => e.Id == id);
@@ -89,6 +97,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
 
         
         [HttpPost]
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Edit(int Id,Actor actor, IFormFile? NewProfilePic)
         {
             ModelState.Remove("movies");
@@ -137,6 +146,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         #endregion
 
         #region Delete
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Delete(int id)
         {
             var actor = await _actorRepository.GetOneAsync(e => e.Id == id);

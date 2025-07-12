@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Cinema_ETickets.ViewModel
 {
     public class RegisterVM
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         [Required]
         public string UserName { get; set; } = null!;
         [Required]
@@ -21,8 +22,8 @@ namespace Cinema_ETickets.ViewModel
         [DataType(DataType.Password)]
         [Compare(nameof(Password))]
         public string ConfirmPassword { get; set; } = string.Empty;        
-        public string? Adrress { get; set; }
-        public string? Roles { get; set; }
+        public string? Address { get; set; }
+        public List<SelectListItem>? Roles { get; set; }
         
     }
 }

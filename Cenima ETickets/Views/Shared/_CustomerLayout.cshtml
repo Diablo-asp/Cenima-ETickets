@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -65,7 +66,10 @@
                                 <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="SignOut">Logout</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="Identity" asp-controller="Profile" asp-action="Index">MyProfile</a>
+                                <a class="nav-link" asp-area="Identity" asp-controller="UserProfile" asp-action="Index">MyProfile</a>
+                            </li>
+                            <li class="nav-item d-flex align-items-center ms-3">
+                                <img src="~/images/users/default.png" alt="User" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover; border: 2px solid #fff;" />
                             </li>
                         }
                         else

@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using Cinema_ETickets.Data;
 using Cinema_ETickets.Models;
+using Cinema_ETickets.Utility;
 using Cinema_ETickets.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,8 @@ using Microsoft.VisualBasic;
 namespace Cinema_ETickets.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin},{SD.Employe},{SD.Company}")]
+
     public class MoviesController : Controller
     {
         private IMovieRepository _movieRepository;
@@ -55,6 +59,8 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         #endregion
 
         #region Create
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
+
         public async Task<IActionResult> Create()
         {
             var vm = new EditMovieVM
@@ -69,6 +75,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Create(EditMovieVM vm, IFormFile ImgUrl)
         {
             ModelState.Remove("Movie.ImgUrl");
@@ -125,7 +132,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         #endregion
 
         #region Edit        
-        [HttpGet]
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Edit(int id)
         {
             var vm = await _movieRepository.GetEditMovieVMAsync(id);
@@ -135,6 +142,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Edit(int id, EditMovieVM vm, IFormFile? ImgUrl)
         {
             ModelState.Remove("Movie.ImgUrl");
@@ -160,6 +168,7 @@ namespace Cinema_ETickets.Areas.Admin.Controllers
         #endregion
 
         #region Delete
+        [Authorize(Roles = $"{SD.SuperAdmin},{SD.Admin}")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _movieRepository.DeleteMovieAsync(id);

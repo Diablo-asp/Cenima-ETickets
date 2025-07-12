@@ -1,0 +1,102 @@
+﻿@model Dictionary<ApplicationUser,string>
+@{
+    ViewData["Title"] = "Users";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (TempData["success-notification"] is not null)
+{
+    @section Scripts {
+    <script>
+        toastr.error('@TempData["success-notification"]')
+    </script>
+    }
+}
+
+@if (@TempData["error-notification"] is not null)
+{
+    @section Scripts {
+    <script>
+        toastr.error('@TempData["error-notification"]')
+    </script>
+
+    @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+
+    }
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">All Users</h2>
+
+    @if (User.IsInRole(SD.SuperAdmin) || User.IsInRole(SD.Admin))
+    {
+        <p>
+            <a asp-area="Admin" asp-controller="User" asp-action="Create" class="btn btn-primary">➕ Create New User</a>
+        </p>
+    }
+
+    <!-- جدول عرض الأفلام -->
+    <table class="table table-bordered table-hover shadow-sm text-center align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">UserName</th>
+                <th scope="col">Address</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+                <th scope="col">Is Confirmed</th>
+                <th scope="col">IsBlocked</th>
+                @if (User.IsInRole(SD.SuperAdmin) || User.IsInRole(SD.Admin))
+                {
+                    <th scope="col">Actions</th>
+                }
+
+            </tr>
+        </thead>
+        <tbody>            
+            @foreach (var user in Model.Keys)
+            {
+                <tr>
+                    <td>@(user.FirstName + " " + user.LastName)</td>
+                    <td>@user.UserName</td>
+                    @if(user.Address is not null)
+                    {
+                        <td>@(user.Address?.Length > 50 ? user.Address.Substring(0, 50) + "..." : user.Address)</td>
+                    }
+                    else
+                    {
+                        <td> <span class="badge text-bg-danger">No Address</span></td>
+                    }
+                    <td>@user.Email</td>
+                    <td>@Model[user]</td>
+                    @if(!user.EmailConfirmed)
+                    {
+                        <td><span class="badge text-bg-danger">@user.EmailConfirmed</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="badge text-bg-primary">@user.EmailConfirmed</span></td>
+                    }
+                    @if(user.LockoutEnabled)
+                    {
+                        <td><span class="badge text-bg-primary">@user.LockoutEnabled</span></td>
+                    }
+                    else
+                    {
+                         <td><span class="badge text-bg-danger">@user.LockoutEnabled</span></td>
+                    }
+                    <td>
+                        @if (User.IsInRole(SD.SuperAdmin) || User.IsInRole(SD.Admin))
+                        {
+                            <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-warning">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-sm btn-danger">Delete</a>
+                        }
+                    </td>
+                </tr>
+                
+            }
+        </tbody>
+    </table>
+    </div>

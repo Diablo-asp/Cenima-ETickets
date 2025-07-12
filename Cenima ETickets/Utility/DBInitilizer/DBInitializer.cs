@@ -42,8 +42,11 @@ namespace Cinema_ETickets.Utility.DBInitilizer
                 }, "2143Db@@").GetAwaiter().GetResult();
 
                 var user = _userManager.FindByNameAsync("SuperAdmin").GetAwaiter().GetResult();
+                if (user is not null)
+                {
+                    _userManager.AddToRoleAsync(user, SD.SuperAdmin);
+                }
 
-                _userManager.AddToRoleAsync(user, SD.SuperAdmin);
             }
 
         }

@@ -1,10 +1,13 @@
 
 using Cinema_ETickets.Utility;
 using Cinema_ETickets.Utility.DBInitilizer;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Shared;
 
 namespace Cinema_ETickets
 {
@@ -29,13 +32,22 @@ namespace Cinema_ETickets
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+            });
+
+            builder.Services.AddAuthorization();
+
+            builder.Services.AddScoped<IDBInitializer, DBInitializer>();
+
             builder.Services.AddScoped<ICategoryRepository ,CategoryRepository>();
             builder.Services.AddScoped<ICinemaRepository ,CinemaRepository>();
             builder.Services.AddScoped<IActorRepository ,ActorRepository>();
             builder.Services.AddScoped<IMovieRepository ,MovieRepository>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
-            builder.Services.AddScoped<IDBInitializer, DBInitializer>();
 
 
             var app = builder.Build();
@@ -51,6 +63,7 @@ namespace Cinema_ETickets
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
