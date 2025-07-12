@@ -10,8 +10,6 @@ namespace Cinema_ETickets.Models
         public string LastName { get; set; } = null!;
         public DateTime? EmailConfirmationSentAt { get; set; }
         public DateTime? PasswordLastChangedAt { get; set; }
-        public string? ProfilePicture { get; set; }
-
 
     }
 }
