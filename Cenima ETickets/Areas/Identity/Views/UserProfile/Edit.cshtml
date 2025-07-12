@@ -1,0 +1,98 @@
+﻿@model Cinema_ETickets.ViewModel.UserProfileVM
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="container mt-4">
+    <h2>Edit Profile</h2>
+    <hr />
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <img id="previewImage"
+                     src="@(string.IsNullOrEmpty(Model.ProfilePicture)
+         ? "/images/default-user.png"
+         : "/images/UserProfilePic/" + Model.ProfilePicture)"
+                     alt="Profile Picture"
+                     class="img-fluid rounded-circle shadow-sm"
+                     style="width: 200px; height: 200px; object-fit: cover;" />
+
+                <div class="form-group mt-2">
+                    <label for="ImgUrl" class="btn btn-outline-primary">
+                        <i class="fas fa-upload"></i> Upload New Picture
+                    </label>
+                    <input type="file" name="ImgUrl" id="ImgUrl" class="d-none" accept="image/*" />
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="form-group mb-2">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-2">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-2">
+                    <label asp-for="PhoneNumber"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-2">
+                    <label asp-for="Address"></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+
+                <hr />
+                <h5>Change Password (optional)</h5>
+                <div class="form-group mb-2">
+                    <label asp-for="OldPassword"></label>
+                    <input asp-for="OldPassword" class="form-control" />
+                    <span asp-validation-for="OldPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-2">
+                    <label asp-for="NewPassword"></label>
+                    <input asp-for="NewPassword" class="form-control" />
+                    <span asp-validation-for="NewPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-2">
+                    <label asp-for="ConfirmPassword"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-success mt-3">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.getElementById('ImgUrl').addEventListener('change', function (event) {
+            const input = event.target;
+            const previewImage = document.getElementById('previewImage');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+    </script>
+}
