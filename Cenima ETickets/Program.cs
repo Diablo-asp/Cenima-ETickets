@@ -46,6 +46,7 @@ namespace Cinema_ETickets
             builder.Services.AddScoped<ICinemaRepository ,CinemaRepository>();
             builder.Services.AddScoped<IActorRepository ,ActorRepository>();
             builder.Services.AddScoped<IMovieRepository ,MovieRepository>();
+            builder.Services.AddScoped<ICartRepository ,CartRepository>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 

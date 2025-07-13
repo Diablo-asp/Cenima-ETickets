@@ -167,16 +167,14 @@
                         </button>
                     }else
                     {
-                        <form asp-controller="Cart"
-                              asp-action="Checkout"
-                              method="post"
+                        <form asp-controller="Cart" asp-action="AddtoCart" method="post"
                               class="d-flex align-items-center mt-3"
                               style="gap: 10px;">
 
                             <input type="hidden" name="MovieId" value="@Model.Id" />
 
                             <input type="number"
-                                   name="TicketsQuantity"
+                                   name="Count"
                                    class="form-control form-control-sm"
                                    placeholder="Tickets"
                                    min="1"
@@ -184,8 +182,7 @@
                                    style="width: 100px;"
                                    required />
 
-                            <button type="submit"
-                                    class="btn btn-sm btn-success"
+                            <button type="submit" class="btn btn-sm btn-success"
                             @(Model.CurrentStatus == MovieStatus.Expired ? "disabled" : "")>
                                 Add To Cart
                             </button>

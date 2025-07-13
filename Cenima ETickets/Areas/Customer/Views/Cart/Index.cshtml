@@ -1,0 +1,115 @@
+﻿@model IEnumerable<Cart>
+
+	<style>
+	body.dark-mode {
+		background-color: #1e1e1e;
+		color: #f1f1f1;
+	}
+
+		body.dark-mode .card-footer {
+			background-color: #1c1c1c;
+			color: #fff;
+		}
+	body.dark-mode .card {
+		background-color: #2c2c2c !important;
+		color: #ffffff !important;
+		border-color: #444 !important;
+	}
+
+	body.dark-mode .btn-outline-primary {
+		border-color: #ffc107;
+		color: #ffc107;
+	}
+
+		body.dark-mode .btn-outline-primary:hover {
+			background-color: #ffc107;
+			color: #121212;
+		}
+
+	body.dark-mode .btn-primary {
+		background-color: #ffc107;
+		border-color: #ffc107;
+		color: #121212;
+	}
+
+		body.dark-mode .btn-primary:hover {
+			background-color: #e0b400;
+			border-color: #e0b400;
+		}
+	</style>
+<form method="post">
+	<br />
+	<div class="card shadow border-0">
+		<div class="card-body my-4">
+			<div class="row">
+			</div>
+			<div class="row mb-3 pb-3">
+				<div class="container">
+					<a href="/Customer/Home/Index" class="btn btn-outline-primary text-uppercase mb-5 btn-sm">
+						<small>Continue Shopping</small>
+					</a>
+				</div>				
+				<div class="col-md-10 offset-md-1">
+
+
+					@foreach (var item in Model)
+					{
+						<div class="row border-bottom pb-3">
+							<div class="d-none d-lg-block col-lg-1 text-center py-2">
+								<img src="~/images/movies/@item.Movie.ImgUrl" class="rounded" width="100%" />
+							</div>
+							<div class="col-12 col-lg-6 pt-md-3">
+								<h5 class="text-uppercase text-secondary"><strong>@item.Movie.Name</strong></h5>
+								<p><small>@item.Movie.Description</small></p>
+							</div>
+							<div class="col-12  col-lg-5 text-center row">
+								<div class="col-3 text-md-right pt-2 pt-md-4">
+									<h6 class="fw-semibold">
+										@item.Movie.Price
+										<span class="text-light ">&nbsp;x&nbsp;</span>@item.Count
+									</h6>
+								</div>
+								<div class="col-6 col-sm-4 col-lg-6 pt-2">
+									<div class="w-75 btn-group" role="group">
+										<a href="/Customer/Cart/IncrementCount?movieId=@item.MovieId" class="btn btn-outline-primary bg-gradient py-2">
+											<i class="bi bi-plus-square">+</i>
+										</a> &nbsp;
+										<a href="/Customer/Cart/DecrementCount?movieId=@item.MovieId" class="btn btn-outline-primary bg-gradient py-2">
+											<i class="bi bi-dash-square">-</i>
+										</a>
+									</div>
+
+								</div>
+								<div class="col-3 col-sm-4 col-lg-2 offset-lg-1 text-right pt-2">
+									<a href="/Customer/Cart/Delete?movieId=@item.MovieId" class="btn btn-danger bg-gradient py-2 ">
+										<i class="bi bi-trash-fill">Delete</i>
+									</a>
+								</div>
+							</div>
+
+						</div>
+					}
+
+
+				</div>
+			</div>
+			<div class="card-footer bg-black border-0">
+				<div class="row">
+					<div class="col-md-4 offset-md-4">
+						<ul class="list-group mb-4">
+							<li class="d-flex justify-content-between align-items-center">
+								<h5 class="text-bg-secondary fw-semibold text-uppercase"> Total (EGP)</h5>
+								<h4 class="text-bg-secondary fw-bolder">@ViewBag.TotalPrice.ToString("c")</h4>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2 offset-md-5">
+						<a href="/Customer/Cart/Pay" class="btn btn-primary border-0 bg-gradient w-100 py-2">Pay</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
