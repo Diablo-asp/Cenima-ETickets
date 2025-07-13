@@ -30,7 +30,6 @@
                     <label asp-for="Movie.Price" class="form-label"></label>
                     <input asp-for="Movie.Price" class="form-control" />
                     <span class="text-danger" asp-validation-for="Movie.Name"></span>
-
                 </div>
 
                 <div class="mb-3">
@@ -58,6 +57,12 @@
                 <div class="mb-3">
                     <label asp-for="Movie.EndDate" class="form-label"></label>
                     <input asp-for="Movie.EndDate" type="date" class="form-control" />
+                    <span class="text-danger" asp-validation-for="Movie.Name"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Movie.TicketsQuantity" class="form-label"></label>
+                    <input asp-for="Movie.TicketsQuantity" class="form-control" />
                     <span class="text-danger" asp-validation-for="Movie.Name"></span>
                 </div>
 

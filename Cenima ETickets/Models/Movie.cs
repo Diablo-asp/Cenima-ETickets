@@ -17,6 +17,8 @@ namespace Cinema_ETickets.Models
         public string? ImgUrl { get; set; }
         public string? TrairlerUrl { get; set; }
         [Required]
+        public int TicketsQuantity { get; set; }
+        [Required]
         public DateTime StartDate { get; set; }
         [Required]
         public DateTime EndDate { get; set; }

@@ -60,6 +60,12 @@
                 </div>
 
                 <div class="mb-3">
+                    <label asp-for="Movie.TicketsQuantity" class="form-label"></label>
+                    <input asp-for="Movie.TicketsQuantity" class="form-control" />
+                    <span class="text-danger" asp-validation-for="Movie.Name"></span>
+                </div>
+
+                <div class="mb-3">
                     <label asp-for="Movie.CenimaId" class="form-label"></label>
                     <select asp-for="Movie.CenimaId" class="form-select"
                             asp-items="@(new SelectList(Model.Cenimas, "Id", "Name"))">

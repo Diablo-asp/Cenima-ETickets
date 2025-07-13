@@ -190,6 +190,7 @@ namespace Cinema_ETickets.Repositories
             movieInDb.TrairlerUrl = vm.Movie.TrairlerUrl;
             movieInDb.StartDate = vm.Movie.StartDate;
             movieInDb.EndDate = vm.Movie.EndDate;
+            movieInDb.TicketsQuantity = vm.Movie.TicketsQuantity;
             movieInDb.CenimaId = vm.Movie.CenimaId;
             movieInDb.CategoryId = vm.Movie.CategoryId;
 

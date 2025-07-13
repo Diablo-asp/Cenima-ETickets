@@ -27,6 +27,7 @@
                 <th>Cinema</th>
                 <th>Start</th>
                 <th>End</th>
+                <th>Ticets</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -46,6 +47,7 @@
                         <td>@movie.cenima?.Name</td>
                         <td>@movie.StartDate.ToString("yyyy-MM-dd")</td>
                         <td>@movie.EndDate.ToString("yyyy-MM-dd")</td>
+                        <td>@movie.TicketsQuantity</td>
                         <td>
                             @switch (movie.CurrentStatus)
                             {
