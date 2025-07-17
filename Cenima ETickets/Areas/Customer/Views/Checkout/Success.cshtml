@@ -1,0 +1,15 @@
+﻿@model SuccessVM
+
+<div class="container text-center py-5">
+    <h2 class="text-success mb-4">✅ Payment Successful!</h2>
+    <p class="lead">Thank you for your purchase. Your payment has been Completed successfully.</p>
+
+    <hr />
+
+    <h4 class="text-primary mt-4">🧾 Order Summary</h4>
+    <p><strong>Payment ID:</strong> @Model.Order.PaymentId</p>
+    <p><strong>Total:</strong> @Model.Order.TotalPrice.ToString("C")</p>
+    <p><strong>Date:</strong> @Model.Order.Date.ToString("dd MMM yyyy - HH:mm")</p>
+
+    <a href="/" class="btn btn-outline-success mt-4">🎬 Back to Home</a>
+</div>
