@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Shared;
+using Stripe;
 
 namespace Cinema_ETickets
 {
@@ -21,8 +22,7 @@ namespace Cinema_ETickets
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<ApplicationDbContext>(
-                option => option.UseSqlServer("Data Source=.;DataBase=Cinema_ETickets;Integrated Security=True;" +
-                                "Trust Server Certificate=True")
+                option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
                 );
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
@@ -47,9 +47,14 @@ namespace Cinema_ETickets
             builder.Services.AddScoped<IActorRepository ,ActorRepository>();
             builder.Services.AddScoped<IMovieRepository ,MovieRepository>();
             builder.Services.AddScoped<ICartRepository ,CartRepository>();
+            builder.Services.AddScoped<IOrderRepository ,OrderRepository>();
+            builder.Services.AddScoped<IOrderItemRepository ,OrderItemRepository>();
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
             var app = builder.Build();
 
