@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 
 namespace Cinema_ETickets.Areas.Identity.Controllers
 {
@@ -11,11 +12,21 @@ namespace Cinema_ETickets.Areas.Identity.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IOrderItemRepository _orderItemRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IMovieRepository _movieRepository;
+        private readonly ICartRepository _cartRepository;
 
-        public UserProfileController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UserProfileController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
+            IOrderItemRepository orderItemRepository,IOrderRepository orderRepository,IMovieRepository movieRepository,
+            ICartRepository cartRepository)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _orderItemRepository = orderItemRepository;
+            _orderRepository = orderRepository;
+            _movieRepository = movieRepository;
+            _cartRepository = cartRepository;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -122,6 +133,55 @@ namespace Cinema_ETickets.Areas.Identity.Controllers
             TempData["success-notification"] = "Profile updated successfully!";
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> MyTickets()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
+
+            var orders = await _orderRepository.GetAsync(
+                o => o.ApplicationUserId == user.Id && o.OrderStatus == OrderStatus.Completed
+            );
+
+            
+
+            var tickets = new List<UserTicketVM>();
+
+            foreach (var order in orders)
+            {
+                var orderItems = await _orderItemRepository.GetAsync(
+                    oi => oi.OrderId == order.Id,
+                    includes: [oi => oi.Movie, oi => oi.Movie.cenima, oi => oi.Movie.Category]
+                );
+
+                foreach (var item in orderItems)
+                {
+                    tickets.Add(new UserTicketVM
+                    {
+                        OrderId = order.Id,
+                        OrderDate = order.Date,
+
+                        MovieName = item.Movie.Name,
+                        MovieImage = item.Movie.ImgUrl!,
+                        MovieStatus = item.Movie.CurrentStatus.ToString(),
+                        StartDate = item.Movie.StartDate,
+                        EndDate = item.Movie.EndDate,
+                        CinemaName = item.Movie.cenima.Name,
+                        CategoryName = item.Movie.Category.Name,
+                        OrderStatus = item.Order.OrderStatus.ToString(),
+
+                        Quantity = item.Quantity, // أو item.Count لو عندك Count
+                        TotalPrice = item.TotalPrice
+                    });
+                }
+            }
+
+            return View(tickets);
+        }
+
     }
 }
+
 

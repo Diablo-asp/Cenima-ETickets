@@ -1,0 +1,68 @@
+﻿@model IEnumerable<UserTicketVM>
+
+<div class="container mt-4">
+    <h2 class="mb-4">🎟️ My Tickets</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">You haven't purchased any tickets yet.</div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var ticket in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <img src="~/images/movies/@ticket.MovieImage" class="card-img-top" alt="@ticket.MovieName" style="height:200px; object-fit:cover;" />
+                        <div class="card-body">
+                            <h5 class="card-title">@ticket.MovieName</h5>
+                            <h4 class="card-title"><strong>Order Status :</strong> @ticket.OrderStatus</h4>
+                            <p class="card-text"><strong>Order :</strong> #@ticket.OrderId</p>
+                            <p class="card-text"><strong>Date :</strong> @ticket.OrderDate.ToString("dd MMM yyyy")</p>
+                            <p class="card-text"><strong>Total :</strong> @ticket.TotalPrice.ToString("C")</p>
+                            <p class="card-text"><strong>Start Date :</strong> @ticket.StartDate.ToString("dd MMM yyyy")</p>
+                            <p class="card-text"><strong>End Date :</strong> @ticket.EndDate.ToString("dd MMM yyyy")</p>
+                            <p class="card-text"><strong>Tickets Quantity :</strong> @ticket.Quantity</p>
+                            <div class="card shadow-lg mb-4">
+                                <div class="card-body">
+                                    <p class="card-text text-muted">Order Date: @ticket.OrderDate.ToString("dd MMM yyyy")</p>
+
+                                    <p class="card-text">
+                                        <strong>Cinema:</strong>
+                                        <span class="text-primary">@ticket.CinemaName</span>
+                                    </p>
+
+                                    <p class="card-text">
+                                        <strong>Category:</strong>
+                                        <span class="text-success">@ticket.CategoryName</span>
+                                    </p>
+
+                                    <p class="card-text">
+                                        <strong>Movie Status:</strong>
+                                        <span class="badge @GetStatusClass(ticket.MovieStatus)">
+                                            @ticket.MovieStatus
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@functions {
+    string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "Active" => "bg-success text-light",
+            "upcoming" => "bg-warning text-dark",
+            "Expired" => "bg-danger text-light",
+            _ => "bg-secondary text-light"
+        };
+    }
+}

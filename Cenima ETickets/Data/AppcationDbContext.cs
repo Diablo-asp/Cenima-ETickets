@@ -20,6 +20,8 @@ namespace Cinema_ETickets.Data
         public DbSet<Actor> actors { get; set; }
         public DbSet<ActorMovie> ActorMovies { get; set; }
         public DbSet<Cart> Carts { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
 
         public ApplicationDbContext()
         {
