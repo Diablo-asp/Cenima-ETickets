@@ -214,14 +214,37 @@
                     <ul class="navbar-nav flex-grow-3">
                         @if(User is not null && User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="SignOut">Logout</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    My Profile
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Identity" asp-controller="UserProfile" asp-action="Index">
+                                            View Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Identity" asp-controller="UserProfile" asp-action="Edit">
+                                            Edit Profile
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" asp-area="Identity" asp-controller="Account" asp-action="SignOut">
+                                            Logout
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="Identity" asp-controller="UserProfile" asp-action="Index">MyProfile</a>
+                                <a class="nav-link" asp-area="Identity" asp-controller="UserProfile" asp-action="MyTickets">My Tickets</a>
                             </li>    
                                 <li class="nav-item d-flex align-items-center ms-3">
-                                <img src="@profileImage" alt="User" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;" />
+                                <a asp-area="Identity" asp-action="Index" asp-controller="UserProfile">
+                                    <img src="@profileImage" alt="User" class="rounded-circle"
+                                         style="width: 35px; height: 35px; object-fit: cover;" />
+                                </a>                                
                             </li>
                             }
                         else
